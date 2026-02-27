@@ -1,0 +1,178 @@
+================================================================================
+WORKFLOW PROMPT SIMULATION
+================================================================================
+Workflow Type: combined
+Language: Dutch
+Generated: 2026-02-05 09:23:50
+================================================================================
+
+Loaded prompt module: core.prompting.prompt_dutch
+
+--------------------------------------------------------------------------------
+WORKFLOW CONFIGURATION
+--------------------------------------------------------------------------------
+Name: Combined Evaluation (Workflow 8)
+Description: Hierarchical + Rubric + CoT + Bias Mitigation
+System Prompt: enhanced
+Output Format: reasoning
+Uses Clusters: Yes
+Uses Rubric: Yes
+
+NOTE: Showing cluster 'linguistic_grammar' as example (hierarchical workflows process multiple clusters)
+
+================================================================================
+INSTANCE 1: 11641_4
+================================================================================
+
+[METADATA]
+  Language: Dutch
+  File ID:  11641_4
+
+[ORIGINAL COMMENT]
+  // het slidenummer van de huidige Slide_x000D_
+
+[MODEL PREDICTIONS]
+  - Qwen/CodeQwen1.5-7B:
+     nummer van de huidige slide_x000D_
+  - bigcode/starcoder2-7b:
+    e dat getoond wordt_x000D_
+  - google/codegemma-7b:
+    ummer van de huidige slide_x000D_
+  - ibm-granite/granite-8b-code-base:
+    enummer van de huidige slide_x000D_
+_x000D_
+  - meta-llama/CodeLlama-7b-hf:
+    ummer van de huidige Slide_x000D_
+
+################################################################################
+# COMPLETE PROMPT SENT TO JUDGE MODEL
+################################################################################
+
+================================================================================
+[1] SYSTEM MESSAGE
+================================================================================
+U bent een deskundige code-documentatie evaluator met ervaring in software engineering en meertalige tekstanalyse. Uw taak is om fouten te identificeren in LLM-gegenereerde code commentaren met behulp van een gedetailleerde taxonomie.\n\nEvaluatieprincipes:
+- Wees consistent: Pas dezelfde normen toe, ongeacht de lengte of breedsprakigheid van het commentaar
+- Wees nauwkeurig: Markeer fouten alleen wanneer de inclusiecriteria duidelijk zijn vervuld
+- Controleer inclusie/exclusie: Verifieer altijd de inclusie/exclusiecriteria voordat u een fout bevestigt
+- Taalbewust: Houd er rekening mee dat commentaren in niet-Engelse talen kunnen zijn; evalueer grammatica en semantiek passend voor de doeltaal
+- Contextafhankelijk: Gebruik de omringende codecontext om de semantische nauwkeurigheid te beoordelen
+- Positie-onafhankelijk: Evalueer elke voorspelling onafhankelijk; laat de volgorde uw oordeel niet beïnvloeden
+
+BELANGRIJK: Laat de lengte van het commentaar uw beoordeling van de kwaliteit niet beïnvloeden. Korte commentaren kunnen correct zijn; lange commentaren kunnen fouten bevatten. Evalueer elk commentaar alleen op basis van of het de code nauwkeurig beschrijft volgens de taxonomiecriteria.
+
+================================================================================
+[2] USER MESSAGE
+================================================================================
+U evalueert code commentaren alleen voor LINGUISTIC_GRAMMAR.\n\nRelevante foutcategorieën voor deze evaluatie:\n{
+  "Grammatica": [
+    {
+      "id": "LG-GR1",
+      "naam": "Meervoud",
+      "beschrijving": "",
+      "inclusiecriteria": "Onjuist gebruik van meervoudsregels (het onderwerp en werkwoord in een zin komen niet overeen in getal)",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR2",
+      "naam": "Vervoeging",
+      "beschrijving": "",
+      "inclusiecriteria": "Onjuist gebruik van vervoegingsregels",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR3",
+      "naam": "Geslacht",
+      "beschrijving": "",
+      "inclusiecriteria": "Onjuist geslacht in het geval de taal geslachten voor zelfstandige naamwoorden heeft",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR4",
+      "naam": "Spelling",
+      "beschrijving": "",
+      "inclusiecriteria": "Onjuiste spelling",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR5",
+      "naam": "Hoofdlettergebruik",
+      "beschrijving": "",
+      "inclusiecriteria": "Voorspelling gebruikt hoofdletters op een grammaticaal onjuiste manier: bijv. allemaal hoofdletters, elk woord begint met een hoofdletter",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR6",
+      "naam": "Samenhang",
+      "beschrijving": "",
+      "inclusiecriteria": "1) Fout in het gebruik van taal die het organiseren van woorden en zinsdelen omvat die geen zin hebben (incoherentie).\n2) Ontbrekende (of ongepast gebruik van) een komma of aanhalingsteken\n3) Gebrek aan lokale samenhang - logische en grammaticale consistentie tussen opeenvolgende zinnen\n4) Syntaxfouten - onjuiste rangschikking van woorden en zinsdelen in een zin",
+      "exclusiecriteria": ""
+    }
+  ],
+  "Taalkundig": [
+    {
+      "id": "LG-IS",
+      "naam": "Gebruik van onjuist synoniem",
+      "beschrijving": "",
+      "inclusiecriteria": "Gebruik van een vergelijkbaar woord met een onjuiste betekenis in context (bijv. huis->woning)",
+      "exclusiecriteria": "Sluit synoniemen uit die contextueel gepast zijn, zelfs als ze niet de meest precieze term zijn"
+    }
+  ]
+}\n\nBELANGRIJK: Focus ALLEEN op de hierboven vermelde fouttypen. Negeer andere potentiële problemen—deze worden apart geëvalueerd.\n\nBepaal voor elke foutcategorie hierboven of de fout aanwezig is op basis van de inclusiecriteria. Controleer altijd exclusiecriteria voordat u bevestigt.
+
+# Foutclassificatie Rubric\n\n\n## Grammatica\n\n### [LG-GR1] \n\n**Markeer als AANWEZIG als:**\n\n### [LG-GR2] \n\n**Markeer als AANWEZIG als:**\n\n### [LG-GR3] \n\n**Markeer als AANWEZIG als:**\n\n### [LG-GR4] \n\n**Markeer als AANWEZIG als:**\n\n### [LG-GR5] \n\n**Markeer als AANWEZIG als:**\n\n### [LG-GR6] \n\n**Markeer als AANWEZIG als:**\n\n\n## Taalkundig\n\n### [LG-IS] \n\n**Markeer als AANWEZIG als:**\n
+
+Beoordeel de algehele kwaliteit:
+- correct: Het commentaar is nauwkeurig, compleet en foutloos.
+- gedeeltelijk_correct: Het commentaar is grotendeels correct maar heeft een kleine fout (bijv. kleine typefout, verkeerde variabelenaam, of kleine omissie).
+- incorrect: Het commentaar mist belangrijke informatie of bevat substantiële fouten die verder gaan dan kleine correcties.
+
+Retourneer gestructureerde JSON met resultaten voor elk model:
+{
+  "evaluaties": [
+    {
+      "model_naam": "<model_identificator>",
+      "redenering": "Stapsgewijze analyse: Ten eerste, ik observeer dat...",
+      "fouten": [
+        {
+          "fout_id": "<fout_id>",
+          "zekerheid": <0.0-1.0>,
+          "rechtvaardiging": "Deze fout is van toepassing omdat..."
+        }
+      ],
+      "algehele_kwaliteit": "<correct|gedeeltelijk_correct|incorrect>"
+    }
+  ]
+}
+Als een model geen fouten heeft, retourneer een lege fouten array met redenering die uitlegt waarom het commentaar correct is.
+
+--------------------------------------------------------------------------------
+--- TEXT TO EVALUATE ---
+--------------------------------------------------------------------------------
+{
+  "original_comment": "// het slidenummer van de huidige Slide_x000D_",
+  "model_predictions": [
+    {
+      "model_name": "Qwen/CodeQwen1.5-7B",
+      "predicted_comment": "// het sliden nummer van de huidige slide_x000D_"
+    },
+    {
+      "model_name": "bigcode/starcoder2-7b",
+      "predicted_comment": "// het slide dat getoond wordt_x000D_"
+    },
+    {
+      "model_name": "google/codegemma-7b",
+      "predicted_comment": "// het slidenummer van de huidige slide_x000D_"
+    },
+    {
+      "model_name": "ibm-granite/granite-8b-code-base",
+      "predicted_comment": "// het slidenummer van de huidige slide_x000D_\n_x000D_"
+    },
+    {
+      "model_name": "meta-llama/CodeLlama-7b-hf",
+      "predicted_comment": "// het slidenummer van de huidige Slide_x000D_"
+    }
+  ]
+}
+
+================================================================================

@@ -1,0 +1,173 @@
+================================================================================
+WORKFLOW PROMPT SIMULATION
+================================================================================
+Workflow Type: hierarchical
+Language: Polish
+Generated: 2026-02-05 09:23:49
+================================================================================
+
+Loaded prompt module: core.prompting.prompt_polish
+
+--------------------------------------------------------------------------------
+WORKFLOW CONFIGURATION
+--------------------------------------------------------------------------------
+Name: Hierarchical Evaluation
+Description: Category-clustered evaluation (Workflow 6)
+System Prompt: basic
+Output Format: basic
+Uses Clusters: Yes
+
+NOTE: Showing cluster 'linguistic_grammar' as example (hierarchical workflows process multiple clusters)
+
+================================================================================
+INSTANCE 1: 2506_0
+================================================================================
+
+[METADATA]
+  Language: Polish
+  File ID:  2506_0
+
+[ORIGINAL COMMENT]
+  //ma sens tylko jezeli io strategy to grafika
+
+[MODEL PREDICTIONS]
+  - Qwen/CodeQwen1.5-7B:
+    o wywolywac to zewnetrznie?
+	public void displayPopup()
+	{
+		if(!popupDisplayed)
+		{
+			displayedPop...
+  - bigcode/starcoder2-7b:
+    lko wyswietlaj popupa
+	//wyswietlaj popupa
+	//wyswietlaj popupa
+	//wyswietlaj popupa
+	//wyswietlaj p...
+  - google/codegemma-7b:
+     w przypadku popupów
+  - ibm-granite/granite-8b-code-base:
+    le
+	private void onPopupEvent(PopupEvent event)
+	{
+		//PopupClass popupContent = event.getPopupClass...
+  - meta-llama/CodeLlama-7b-hf:
+    ko na test
+	//TODO: usunac
+
+################################################################################
+# COMPLETE PROMPT SENT TO JUDGE MODEL
+################################################################################
+
+================================================================================
+[1] SYSTEM MESSAGE
+================================================================================
+Jesteś ekspertem oceniającym. Analizujesz kod Java, komentarze i dokumentację pod kątem poprawności na podstawie podanej taksonomii błędów.\n\nInstrukcje łagodzenia uprzedzeń:\n- Unikaj uprzedzenia do rozwlekłości (Verbosity Bias): Nie faworyzuj dłuższych komentarzy. Oceniaj na podstawie poprawności.\n- Zapewnij spójność: Stosuj te same standardy do wszystkich predykcji.\n- Zapobiegaj systematycznym błędom: Oceniaj każdy przypadek niezależnie w oparciu o taksonomię.
+
+================================================================================
+[2] USER MESSAGE
+================================================================================
+Oceniasz komentarze do kodu WYŁĄCZNIE pod kątem: POPRAWNOŚĆ JĘZYKOWĄ I GRAMATYCZNĄ.\n\nIstotne kategorie błędów dla tej oceny:\n{
+  "Gramatyka": [
+    {
+      "id": "LG-GR1",
+      "nazwa": "Liczba mnoga/pojedyncza",
+      "opis": "",
+      "kryteria_wlaczenia": "nieprawidłowe stosowanie zasad liczby mnogiej\n(podmiot i orzeczenie w zdaniu nie zgadzają się pod względem liczby. Na przykład zdanie \"Książka są na stole\" powinno brzmieć \"Książka jest na stole\".)",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "LG-GR2",
+      "nazwa": "Koniugacja",
+      "opis": "",
+      "kryteria_wlaczenia": "Nieprawidłowe użycie reguł koniugacji",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "LG-GR3",
+      "nazwa": "Rodzaj gramatyczny",
+      "opis": "",
+      "kryteria_wlaczenia": "Nieprawidłowy rodzaj gramatyczny w przypadku języków z rodzajami rzeczowników",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "LG-GR4",
+      "nazwa": "Ortografia",
+      "opis": "",
+      "kryteria_wlaczenia": "Nieprawidłowa pisownia",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "LG-GR5",
+      "nazwa": "Wielkie litery",
+      "opis": "",
+      "kryteria_wlaczenia": "Predykcja używa wielkich liter w sposób gramatycznie niepoprawny: np. wszystkie wielkie, każde słowo zaczyna się wielką literą",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "LG-GR6",
+      "nazwa": "Spójność",
+      "opis": "",
+      "kryteria_wlaczenia": "1) Błąd w używaniu języka polegający na organizowaniu słów i fraz, które nie mają sensu (niespójność).\n2) Brak (lub niewłaściwe użycie) przecinka lub cudzysłowu\n3) Brak spójności lokalnej, czyli logicznej i gramatycznej spójności kolejnych, sąsiadujących ze sobą zdań w akapitach. Istotnymi zaburzeniami spójności wypowiedzi są na przykład akapity zbudowane z ciągu zdań, które nie są ze sobą logicznie ani gramatycznie powiązane (strumień luźnych myśli, skojarzeń).\n\n4) Błędy składniowe w piśmie odnoszą się do błędów w układzie słów i fraz w zdaniu, które naruszają zasady gramatyki i struktury zdania.\n- Zdania ciągłe: Występują, gdy dwa lub więcej niezależnych zdań jest połączonych bez odpowiednich znaków interpunkcyjnych lub spójników.\n- Błędnie umieszczone modyfikatory: Ten błąd występuje, gdy słowo lub fraza jest umieszczona zbyt daleko od słowa, które ma modyfikować, co prowadzi do nieporozumień lub dwuznaczności. Na przykład: „Pędząc szybko, autobus został przegapiony”. Sugeruje to, że autobus jechał szybko, a nie osoba, którą miał modyfikować.\n- Podwójne przeczenia: Użycie dwóch słów przeczących w zdaniu może wprowadzać zamieszanie lub dwuznaczność.\n\n- Brak struktury równoległej: Dzieje się tak, gdy lista elementów w zdaniu nie jest przedstawiona w sposób równoległy.",
+      "kryteria_wylaczenia": ""
+    }
+  ],
+  "Językowe": [
+    {
+      "id": "LG-IS",
+      "nazwa": "Użycie niepoprawnego synonimu",
+      "opis": "",
+      "kryteria_wlaczenia": "Użycie podobnego słowa o niepoprawnym znaczeniu w kontekście (np. dom->mieszkanie)",
+      "kryteria_wylaczenia": "Wyklucz synonimy, które są kontekstowo odpowiednie, nawet jeśli nie są najbardziej precyzyjnym terminem"
+    }
+  ]
+}\n\nWAŻNE: Skup się TYLKO na typach błędów wymienionych powyżej. Ignoruj inne potencjalne problemy — będą oceniane osobno.\n\nDla każdej kategorii błędu powyżej określ, czy błąd jest obecny na podstawie kryteriów włączenia. Zawsze sprawdzaj kryteria wyłączenia przed potwierdzeniem.
+
+Etykiety dokładności eksperckiej:
+- poprawne: Przewidziany komentarz zawiera wszystkie informacje z oryginalnego komentarza; dodatkowe istotne szczegóły są dopuszczalne.
+- czesciowo_poprawne: Komentarz jest w większości prawidłowy, ale zawiera drobny błąd (np. literówkę, złą nazwę zmiennej lub niewielkie pominięcie).
+- niepoprawne: Komentarz pomija ważne informacje lub zawiera istotne błędy wykraczające poza drobne poprawki.
+
+Zwróć ustrukturyzowany JSON z wynikami dla każdego modelu:
+{
+  "ewaluacje": [
+    {
+      "nazwa_modelu": "<identyfikator_modelu>",
+      "bledy": ["<id_bledu>", ...],
+      "wyjasnienie": "Krótkie wyjaśnienie znalezionych błędów.",
+      "ogolna_jakosc": "<poprawne|czesciowo_poprawne|niepoprawne>"
+    }
+  ]
+}
+Jeśli model nie ma błędów, użyj pustej tablicy błędów.
+
+--------------------------------------------------------------------------------
+--- TEXT TO EVALUATE ---
+--------------------------------------------------------------------------------
+{
+  "original_comment": "//ma sens tylko jezeli io strategy to grafika",
+  "model_predictions": [
+    {
+      "model_name": "Qwen/CodeQwen1.5-7B",
+      "predicted_comment": "//ma sens to wywolywac to zewnetrznie?\n\tpublic void displayPopup()\n\t{\n\t\tif(!popupDisplayed)\n\t\t{\n\t\t\tdisplayedPopup.show(null, 0, 0);\n\t\t\tpopupDisplayed = true;\n\t\t}\n\t}\n\tpublic void hidePopup()\n\t{\n\t\tif(popupDisplayed)\n\t\t{\n\t\t\tdisplayedPopup.hide();\n\t\t\tpopupDisplayed = false;\n\t\t}\n\t}\n\t//TODO: wywolywac to zewnetrznie?"
+    },
+    {
+      "model_name": "bigcode/starcoder2-7b",
+      "predicted_comment": "//ma sens tylko wyswietlaj popupa\n\t//wyswietlaj popupa\n\t//wyswietlaj popupa\n\t//wyswietlaj popupa\n\t//wyswietlaj popupa\n\t//wyswietlaj popupa\n\t//wyswietlaj popupa\n\t//wyswietlaj popupa\n\t//wyswietlaj popupa\n\t//wyswietlaj popupa\n\t//wyswietlaj popupa\n\t//wyswietlaj popupa\n\t//wyswietlaj popupa\n\t//wys"
+    },
+    {
+      "model_name": "google/codegemma-7b",
+      "predicted_comment": "//ma sens tylko w przypadku popupów"
+    },
+    {
+      "model_name": "ibm-granite/granite-8b-code-base",
+      "predicted_comment": "//ma sens tyle\n\tprivate void onPopupEvent(PopupEvent event)\n\t{\n\t\t//PopupClass popupContent = event.getPopupClass();\n\t\t//test\n\t\tPopupClass popupContent = new PopupClass(\"WOJToWICZ ZAJMUJE DWA (2) MIEJSCA\");\n\t\tJFrame frame = ((GraphicIO)IOManager.getInstance().getStrategy()).getWindow();\n\t\tdisplayedPopup = popupFactory.getPopup(frame, popupContent, popupContent.getWidth(), popupContent.getHeight());\n\t}\n\n}\n\nOutput:\npackage display;\n\nimport IO.GraphicIO"
+    },
+    {
+      "model_name": "meta-llama/CodeLlama-7b-hf",
+      "predicted_comment": "//ma sens tylko na test\n\t//TODO: usunac"
+    }
+  ]
+}
+
+================================================================================

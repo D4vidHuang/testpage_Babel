@@ -1,0 +1,412 @@
+================================================================================
+WORKFLOW PROMPT SIMULATION
+================================================================================
+Workflow Type: standard
+Language: Dutch
+Generated: 2026-02-05 09:23:50
+================================================================================
+
+Loaded prompt module: core.prompting.prompt_dutch
+
+--------------------------------------------------------------------------------
+WORKFLOW CONFIGURATION
+--------------------------------------------------------------------------------
+Name: Standard Evaluation
+Description: Basic evaluation with structured JSON output (Workflow 4)
+System Prompt: basic
+Output Format: basic
+
+================================================================================
+INSTANCE 1: 11641_4
+================================================================================
+
+[METADATA]
+  Language: Dutch
+  File ID:  11641_4
+
+[ORIGINAL COMMENT]
+  // het slidenummer van de huidige Slide_x000D_
+
+[MODEL PREDICTIONS]
+  - Qwen/CodeQwen1.5-7B:
+     nummer van de huidige slide_x000D_
+  - bigcode/starcoder2-7b:
+    e dat getoond wordt_x000D_
+  - google/codegemma-7b:
+    ummer van de huidige slide_x000D_
+  - ibm-granite/granite-8b-code-base:
+    enummer van de huidige slide_x000D_
+_x000D_
+  - meta-llama/CodeLlama-7b-hf:
+    ummer van de huidige Slide_x000D_
+
+################################################################################
+# COMPLETE PROMPT SENT TO JUDGE MODEL
+################################################################################
+
+================================================================================
+[1] SYSTEM MESSAGE
+================================================================================
+U bent een deskundige evaluator. U analyseert Java-code, commentaren, en documentatie op correctheid op basis van een gegeven taxonomie van fouten.\n\nInstructies voor Biasmitigatie:\n- Vermijd Verbosity Bias: Geef geen voorkeur aan langere commentaren. Evalueer op basis van correctheid.\n- Zorg voor Consistentie: Pas dezelfde normen toe op alle voorspellingen.\n- Voorkom Systematische Bias: Evalueer elk geval onafhankelijk op basis van de taxonomie.
+
+================================================================================
+[2] USER MESSAGE
+================================================================================
+U krijgt Java-code met een origineel commentaar en meerdere door modellen gegenereerde voorspellingen in JSON-formaat. Uw taak is om het voorspelde commentaar van elk model te evalueren en fouten uit de taxonomie te identificeren.
+Taxonomie van mogelijke commentaarfouten:
+{
+  "": [
+    {
+      "id": "E",
+      "naam": "Uitgesloten",
+      "beschrijving": "",
+      "inclusiecriteria": "1) Te weinig context (kort bestand)\n2) Automatisch gegenereerde inhoud\n3) Origineel commentaar is in verkeerde taal\n4) Code die is uitgecommentarieerd",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "M",
+      "naam": "Overig",
+      "beschrijving": "",
+      "inclusiecriteria": "Alles wat niet in een van de bovenstaande categorieën valt",
+      "exclusiecriteria": ""
+    }
+  ],
+  "Codefragment": [
+    {
+      "id": "SE-CS1",
+      "naam": "Uitgecommentarieerde code",
+      "beschrijving": "",
+      "inclusiecriteria": "Code die zich in een codeblok bevindt",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "SE-CS2",
+      "naam": "Code bedoeld om uit te voeren",
+      "beschrijving": "",
+      "inclusiecriteria": "Code die het model van plan is uit te voeren",
+      "exclusiecriteria": ""
+    }
+  ],
+  "Grammatica": [
+    {
+      "id": "LG-GR1",
+      "naam": "Meervoud",
+      "beschrijving": "",
+      "inclusiecriteria": "Onjuist gebruik van meervoudsregels (het onderwerp en werkwoord in een zin komen niet overeen in getal)",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR2",
+      "naam": "Vervoeging",
+      "beschrijving": "",
+      "inclusiecriteria": "Onjuist gebruik van vervoegingsregels",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR3",
+      "naam": "Geslacht",
+      "beschrijving": "",
+      "inclusiecriteria": "Onjuist geslacht in het geval de taal geslachten voor zelfstandige naamwoorden heeft",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR4",
+      "naam": "Spelling",
+      "beschrijving": "",
+      "inclusiecriteria": "Onjuiste spelling",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR5",
+      "naam": "Hoofdlettergebruik",
+      "beschrijving": "",
+      "inclusiecriteria": "Voorspelling gebruikt hoofdletters op een grammaticaal onjuiste manier: bijv. allemaal hoofdletters, elk woord begint met een hoofdletter",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR6",
+      "naam": "Samenhang",
+      "beschrijving": "",
+      "inclusiecriteria": "1) Fout in het gebruik van taal die het organiseren van woorden en zinsdelen omvat die geen zin hebben (incoherentie).\n2) Ontbrekende (of ongepast gebruik van) een komma of aanhalingsteken\n3) Gebrek aan lokale samenhang - logische en grammaticale consistentie tussen opeenvolgende zinnen\n4) Syntaxfouten - onjuiste rangschikking van woorden en zinsdelen in een zin",
+      "exclusiecriteria": ""
+    }
+  ],
+  "Hallucinatie": [
+    {
+      "id": "SE-HA1",
+      "naam": "Onjuiste feiten",
+      "beschrijving": "",
+      "inclusiecriteria": "Willekeurig ingevoegde feiten (zoals namen, data of gebeurtenissen) zijn aanwezig in de inhoud en komen niet overeen met de context of verwachte inhoud",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "SE-HA2",
+      "naam": "Contextuele discrepantie",
+      "beschrijving": "",
+      "inclusiecriteria": "Hallucinatie niet gebaseerd op de verstrekte context",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "SE-HA3",
+      "naam": "Gefundeerde gok",
+      "beschrijving": "",
+      "inclusiecriteria": "1) Syntactisch correct maar semantisch of feitelijk onjuist\n2) Gebaseerd op de verstrekte context",
+      "exclusiecriteria": ""
+    }
+  ],
+  "Onjuist commentaarformaat": [
+    {
+      "id": "ST-IF1",
+      "naam": "Stijlinconsistentie",
+      "beschrijving": "",
+      "inclusiecriteria": "1) Model gebruikt verouderd formaat van javadoc\n2) Model gebruikt commentaarformaat dat inconsistent is met de standaarden\n3) Model herhaalt automatisch gegenereerd commentaarformaat dat niet informatief genoeg is\n4) Model volgt niet het javadoc-formaat dat aanwezig is in de rest van het bestand",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "ST-IF2",
+      "naam": "Weggelaten identificator",
+      "beschrijving": "",
+      "inclusiecriteria": "1) Model begint @params op te sommen, maar mist er enkele\n2) Generatie begint met een @return-tag maar heeft dan geen @params\n3) @params gegenereerd, maar geen @return voor een methode die niet void retourneert",
+      "exclusiecriteria": ""
+    }
+  ],
+  "Taalkundig": [
+    {
+      "id": "LG",
+      "naam": "Taalkundige fout",
+      "beschrijving": "",
+      "inclusiecriteria": "Taalkundige fouten zijn alle fouten gerelateerd aan de taalkundige inhoud van de gegenereerde tekst",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR",
+      "naam": "Grammatica",
+      "beschrijving": "",
+      "inclusiecriteria": "Taal is correct, er is een grammaticale fout gemaakt",
+      "exclusiecriteria": "Sluit fouten uit die gerelateerd zijn aan stilistische keuzes in plaats van grammaticale correctheid"
+    },
+    {
+      "id": "LG-IS",
+      "naam": "Gebruik van onjuist synoniem",
+      "beschrijving": "",
+      "inclusiecriteria": "Gebruik van een vergelijkbaar woord met een onjuiste betekenis in context (bijv. huis->woning)",
+      "exclusiecriteria": "Sluit synoniemen uit die contextueel gepast zijn, zelfs als ze niet de meest precieze term zijn"
+    },
+    {
+      "id": "LG-WL",
+      "naam": "Verkeerde taal",
+      "beschrijving": "",
+      "inclusiecriteria": "Het model voorspelt een commentaar (of een significant deel ervan) in een andere taal dan de doeltaal",
+      "exclusiecriteria": ""
+    }
+  ],
+  "Memorisatie": [
+    {
+      "id": "MS-ME1",
+      "naam": "Bevat PII",
+      "beschrijving": "Persoonlijk identificeerbare informatie (PII) is informatie die, alleen of met andere relevante gegevens, een persoon kan identificeren",
+      "inclusiecriteria": "Persoonlijk identificeerbare informatie is opgenomen in het gegenereerde commentaar (fictief of kwam niet voor in de originele prompt)",
+      "exclusiecriteria": "Sluit niet-specifieke informatie uit die niet kan worden gebruikt om een persoon te identificeren"
+    },
+    {
+      "id": "MS-ME2",
+      "naam": "Bevat URL",
+      "beschrijving": "",
+      "inclusiecriteria": "URL naar een bestand of repository is opgenomen",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "MS-ME3",
+      "naam": "Letterlijke memorisatie",
+      "beschrijving": "",
+      "inclusiecriteria": "1) Het model heeft de inhoud letterlijk gememoriseerd\n2) De tekst zou niet gegenereerd zijn zonder memorisatie",
+      "exclusiecriteria": ""
+    }
+  ],
+  "Modelspecifiek": [
+    {
+      "id": "MS",
+      "naam": "Modelspecifiek",
+      "beschrijving": "",
+      "inclusiecriteria": "Modelspecifieke fouten zijn alle fouten die gerelateerd zijn aan de werking van LLM's",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "MS-IG",
+      "naam": "Incoherente generatie",
+      "beschrijving": "",
+      "inclusiecriteria": "Model produceert willekeurige woorden zonder logisch verband",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "MS-CC",
+      "naam": "Context kopiëren",
+      "beschrijving": "",
+      "inclusiecriteria": "Model kopieert de omringende context letterlijk",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "MS-ME",
+      "naam": "Memorisatie",
+      "beschrijving": "",
+      "inclusiecriteria": "Model herkende de code in enige mate",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "MS-ET",
+      "naam": "Vroege beëindiging",
+      "beschrijving": "",
+      "inclusiecriteria": "Model stopt met genereren midden in de voorspelling, terwijl het commentaar duidelijk niet compleet is of niets heeft gegenereerd",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "MS-LT",
+      "naam": "Late beëindiging",
+      "beschrijving": "",
+      "inclusiecriteria": "Het commentaar blijft inhoud produceren hoewel het eerder had moeten stoppen. bijv.\n1. Wanneer het onnodige lege tags bevat (@version)\n2. Blijft regelcommentaren toevoegen terwijl het onnodig is",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "MS-RE",
+      "naam": "Herhaling",
+      "beschrijving": "",
+      "inclusiecriteria": "Model genereert en herhaalt wat het al in enige mate heeft gezegd",
+      "exclusiecriteria": ""
+    }
+  ],
+  "Herhaling": [
+    {
+      "id": "MS-RE1",
+      "naam": "Patroonherhaling",
+      "beschrijving": "",
+      "inclusiecriteria": "Model genereerde een herhalend patroon: bijv. 1,2,3,4,5,6,",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "MS-RE2",
+      "naam": "Letterlijke herhaling",
+      "beschrijving": "",
+      "inclusiecriteria": "Model genereerde letterlijke herhaling: bijv. ik herhaal ik herhaal ik herhaal",
+      "exclusiecriteria": ""
+    }
+  ],
+  "Semantisch": [
+    {
+      "id": "SE",
+      "naam": "Semantische fout",
+      "beschrijving": "",
+      "inclusiecriteria": "Semantische fouten zijn alle fouten gerelateerd aan de semantiek of betekenis van de gegenereerde inhoud",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "SE-MD",
+      "naam": "Ontbrekende details",
+      "beschrijving": "",
+      "inclusiecriteria": "1) Beschrijving beschrijft niet volledig de inhoud van de samengevatte code\n2) Huidige informatie beschrijft niet de volledige functionaliteit van de samengevatte code\n3) Huidige informatie beschrijft niet het volledige doel van de samengevatte code\n4) Gegenereerd commentaar is te generiek",
+      "exclusiecriteria": "1) Sluit samenvattingen op hoog niveau uit die overeenkomen met het verwachte antwoordformaat\n2) Sluit commentaren uit die algemeen zijn maar nog steeds voldoende begrip van de functionaliteit van de code bieden"
+    },
+    {
+      "id": "SE-TS",
+      "naam": "Te specifiek",
+      "beschrijving": "",
+      "inclusiecriteria": "Gegenereerd commentaar is te specifiek. Bevat gedetailleerde samenvatting van elke regel, wat het doel van documentatie en samenvatting ondermijnt",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "SE-HA",
+      "naam": "Hallucinatie",
+      "beschrijving": "",
+      "inclusiecriteria": "Categorie voor hallucinatie-generaties, d.w.z. feitelijk onjuist of niet gerelateerd aan de invoerprompt",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "SE-CS",
+      "naam": "Codefragment opname",
+      "beschrijving": "",
+      "inclusiecriteria": "Model genereert daadwerkelijke code buiten commentaar",
+      "exclusiecriteria": "1) Sluit commentaren uit die minimale codefragmenten bevatten voor duidelijkheid of voorbeelddoeleinden\n2) Sluit korte gegenereerde codefragmenten uit die zijn gemaakt voor voltooiing en goed in het programma passen"
+    }
+  ],
+  "Syntax": [
+    {
+      "id": "ST",
+      "naam": "Syntax",
+      "beschrijving": "",
+      "inclusiecriteria": "Syntaxfouten zijn alle fouten gerelateerd aan de syntax van de commentaren",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "ST-IF",
+      "naam": "Onjuist commentaarformaat",
+      "beschrijving": "",
+      "inclusiecriteria": "1) Model gebruikt verouderd formaat van javadoc\n2) Model gebruikt commentaarformaat dat inconsistent is met de standaarden\n3) Fouten met javadoc-formaat",
+      "exclusiecriteria": ""
+    }
+  ],
+  "Verkeerde taal": [
+    {
+      "id": "LG-WL1",
+      "naam": "Ongewenste vertalingen",
+      "beschrijving": "",
+      "inclusiecriteria": "Vertalingen die correct zijn maar ongewenst in de taal omdat de woorden zelden worden gebruikt in die context",
+      "exclusiecriteria": "Sluit correct gebruik van buitenlandse woorden uit die vaak worden geïntegreerd in de gebruikte taal"
+    },
+    {
+      "id": "LG-WL2",
+      "naam": "Onjuiste taal",
+      "beschrijving": "",
+      "inclusiecriteria": "Het model voorspelt een commentaar (of een significant deel ervan) in een andere taal dan de doeltaal",
+      "exclusiecriteria": ""
+    }
+  ]
+}
+
+Retourneer gestructureerde JSON met resultaten voor elk model:
+{
+  "evaluaties": [
+    {
+      "model_naam": "<model_identificator>",
+      "fouten": ["<fout_id>", ...],
+      "uitleg": "Korte uitleg van gevonden fouten.",
+      "algehele_kwaliteit": "<correct|gedeeltelijk_correct|incorrect>"
+    }
+  ]
+}
+
+Kwaliteitslabels:
+- correct: Het commentaar is nauwkeurig, compleet en foutloos.
+- gedeeltelijk_correct: Het commentaar is grotendeels correct maar heeft een kleine fout.
+- incorrect: Het commentaar mist belangrijke informatie of bevat substantiële fouten.
+
+Als een model geen fouten heeft, gebruik dan een lege fouten array.
+
+--------------------------------------------------------------------------------
+--- TEXT TO EVALUATE ---
+--------------------------------------------------------------------------------
+{
+  "original_comment": "// het slidenummer van de huidige Slide_x000D_",
+  "model_predictions": [
+    {
+      "model_name": "Qwen/CodeQwen1.5-7B",
+      "predicted_comment": "// het sliden nummer van de huidige slide_x000D_"
+    },
+    {
+      "model_name": "bigcode/starcoder2-7b",
+      "predicted_comment": "// het slide dat getoond wordt_x000D_"
+    },
+    {
+      "model_name": "google/codegemma-7b",
+      "predicted_comment": "// het slidenummer van de huidige slide_x000D_"
+    },
+    {
+      "model_name": "ibm-granite/granite-8b-code-base",
+      "predicted_comment": "// het slidenummer van de huidige slide_x000D_\n_x000D_"
+    },
+    {
+      "model_name": "meta-llama/CodeLlama-7b-hf",
+      "predicted_comment": "// het slidenummer van de huidige Slide_x000D_"
+    }
+  ]
+}
+
+================================================================================

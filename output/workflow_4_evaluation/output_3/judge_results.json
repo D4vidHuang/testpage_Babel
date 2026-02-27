@@ -1,0 +1,236 @@
+[
+  {
+    "instance_id": "60_1",
+    "metadata": {
+      "file_id": "60_1",
+      "language": "English"
+    },
+    "code_context": {
+      "source_code": "/*Write a program to find the shortest path between vertices using \nbellman-ford algorithm.*/\n\n//bellman ford algorithm for shortest distance from a source node to all the remaining nodes\n\nimport java.util.*;\npublic class BellmanFord {\n    private static int N;\n    private static int[][] graph;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Enter the number of Vertices : \");\n        N = sc.nextInt();\n        System.out.println(\"Enter the Weight Matrix of Graph\");\n        graph = new int[N][N];\n        for (int i = 0; i < N; i++)\n            for (int j = 0; j < N; j++)\n                graph[i][j] = sc.nextInt();\n        System.out.print(\"Enter the Source Vertex : \");\n        int source = sc.nextInt();\n        bellmanFord(source - 1);\n    }\n\n    public static void bellmanFord(int src) {\n        int[] dist = new int[N];\n        Arrays.fill(dist, Integer.MAX_VALUE);\n        dist[src] = 0;\n        for (int i = 0; i < N; i++) {\n            for (int u = 0; u < N; u++) {\n                for (int v = 0; v < N; v++) {\n                    if (graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {\n                        dist[v] = dist[u] + graph[u][v];\n                    }\n                }\n            }\n        }\n        for (int u = 0; u < N; u++) {\n            for (int v = 0; v < N; v++) {\n                if (graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {\n                    System.out.println(\"Negative weight cycle detected.\");\n                    return;\n                }\n            }\n        }\n        printSolution(dist);\n    }\n\n    public static void printSolution(int[] dist) {\n        System.out.println(\"Vertex \\t Distance from Source\");\n        for (int i = 0; i < N; i++) {\n            System.out.println((i + 1) + \"\\t\\t\" + dist[i]);\n        }\n    }\n}\n\n\n/*output:-\nEnter the number of Vertices : 5\nEnter the Weight Matrix of Graph\n0 6 0 7 0\n0 0 5 8 -4\n0 0 0 0 0\n0 0 -3 0 9\n2 0 0 0 0\nEnter the Source Vertex : 1\nVertex   Distance from Source\n1               0\n2               6\n3               4\n4               7\n5               2\n*/\n\n\n/*Enter the number of Vertices : 3\nEnter the Weight Matrix of Graph\n0 10 5\n0 0 -8\n0 0 0\nEnter the Source Vertex : 1\nVertex   Distance from Source\n1               0\n2               10\n3               2\n*/\n\n\n/*\nEnter the number of Vertices : 3\nEnter the Weight Matrix of Graph\n0 10 0\n0 0 20\n0 -30 0\nEnter the Source Vertex : 1\nNegative weight cycle detected.\n*/\n",
+      "original_comment": "//bellman ford algorithm for shortest distance from a source node to all the remaining nodes"
+    },
+    "model_predictions": [
+      {
+        "model_name": "Qwen/CodeQwen1.5-7B",
+        "predicted_comment": "d algorithm is used to find the shortest path between vertices in a graph.\n//It is a dynamic programming algorithm that works by relaxing the edges of the graph\n//repeatedly until the shortest path is found.\n\n//The algorithm starts by initializing the distance of the source vertex to 0 and the distance\n//of all other vertices to infinity. It then relaxes the edges of the graph by updating the\n//distance of the adjacent vertices if the distance of the source vertex plus the weight of\n//the edge is less than the current distance of the adjacent vertex",
+        "masked_code": "<fim_prefix>/*Write a program to find the shortest path between vertices using \nbellman-ford algorithm.*/\n\n//bellman for<fim_suffix>\n\nimport java.util.*;\npublic class BellmanFord {\n    private static int N;\n    private static int[][] graph;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Enter the number of Vertices : \");\n        N = sc.nextInt();\n        System.out.println(\"Enter the Weight Matrix of Graph\");\n        graph = new int[N][N];\n        for (int i = 0; i < N; i++)\n            for (int j = 0; j < N; j++)\n                graph[i][j] = sc.nextInt();\n        System.out.print(\"Enter the Source Vertex : \");\n        int source = sc.nextInt();\n        bellmanFord(source - 1);\n    }\n\n    public static void bellmanFord(int src) {\n        int[] dist = new int[N];\n        Arrays.fill(dist, Integer.MAX_VALUE);\n        dist[src] = 0;\n        for (int i = 0; i < N; i++) {\n            for (int u = 0; u < N; u++) {\n                for (int v = 0; v < N; v++) {\n                    if (graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {\n                        dist[v] = dist[u] + graph[u][v];\n                    }\n                }\n            }\n        }\n        for (int u = 0; u < N; u++) {\n            for (int v = 0; v < N; v++) {\n                if (graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {\n                    System.out.println(\"Negative weight cycle detected.\");\n                    return;\n                }\n            }\n        }\n        printSolution(dist);\n    }\n\n    public static void printSolution(int[] dist) {\n        System.out.println(\"Vertex \\t Distance from Source\");\n        for (int i = 0; i < N; i++) {\n            System.out.println((i + 1) + \"\\t\\t\" + dist[i]);\n        }\n    }\n}\n\n\n/*output:-\nEnter the number of Vertices : 5\nEnter the Weight Matrix of Graph\n0 6 0 7 0\n0 0 5 8 -4\n0 0 0 0 0\n0 0 -3 0 9\n2 0 0 0 0\nEnter the Source Vertex : 1\nVertex   Distance from Source\n1               0\n2               6\n3               4\n4               7\n5               2\n*/\n\n\n/*Enter the number of Vertices : 3\nEnter the Weight Matrix of Graph\n0 10 5\n0 0 -8\n0 0 0\nEnter the Source Vertex : 1\nVertex   Distance from Source\n1               0\n2               10\n3               2\n*/\n\n\n/*\nEnter the number of Vertices : 3\nEnter the Weight Matrix of Graph\n0 10 0\n0 0 20\n0 -30 0\nEnter the Source Vertex : 1\nNegative weight cycle detected.\n*/\n<fim_middle>"
+      },
+      {
+        "model_name": "bigcode/starcoder2-7b",
+        "predicted_comment": "d algorithm\n//Time Complexity : O(V*E)\n//Space Complexity : O(V)",
+        "masked_code": "<fim_prefix>/*Write a program to find the shortest path between vertices using \nbellman-ford algorithm.*/\n\n//bellman for<fim_suffix>\n\nimport java.util.*;\npublic class BellmanFord {\n    private static int N;\n    private static int[][] graph;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Enter the number of Vertices : \");\n        N = sc.nextInt();\n        System.out.println(\"Enter the Weight Matrix of Graph\");\n        graph = new int[N][N];\n        for (int i = 0; i < N; i++)\n            for (int j = 0; j < N; j++)\n                graph[i][j] = sc.nextInt();\n        System.out.print(\"Enter the Source Vertex : \");\n        int source = sc.nextInt();\n        bellmanFord(source - 1);\n    }\n\n    public static void bellmanFord(int src) {\n        int[] dist = new int[N];\n        Arrays.fill(dist, Integer.MAX_VALUE);\n        dist[src] = 0;\n        for (int i = 0; i < N; i++) {\n            for (int u = 0; u < N; u++) {\n                for (int v = 0; v < N; v++) {\n                    if (graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {\n                        dist[v] = dist[u] + graph[u][v];\n                    }\n                }\n            }\n        }\n        for (int u = 0; u < N; u++) {\n            for (int v = 0; v < N; v++) {\n                if (graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {\n                    System.out.println(\"Negative weight cycle detected.\");\n                    return;\n                }\n            }\n        }\n        printSolution(dist);\n    }\n\n    public static void printSolution(int[] dist) {\n        System.out.println(\"Vertex \\t Distance from Source\");\n        for (int i = 0; i < N; i++) {\n            System.out.println((i + 1) + \"\\t\\t\" + dist[i]);\n        }\n    }\n}\n\n\n/*output:-\nEnter the number of Vertices : 5\nEnter the Weight Matrix of Graph\n0 6 0 7 0\n0 0 5 8 -4\n0 0 0 0 0\n0 0 -3 0 9\n2 0 0 0 0\nEnter the Source Vertex : 1\nVertex   Distance from Source\n1               0\n2               6\n3               4\n4               7\n5               2\n*/\n\n\n/*Enter the number of Vertices : 3\nEnter the Weight Matrix of Graph\n0 10 5\n0 0 -8\n0 0 0\nEnter the Source Vertex : 1\nVertex   Distance from Source\n1               0\n2               10\n3               2\n*/\n\n\n/*\nEnter the number of Vertices : 3\nEnter the Weight Matrix of Graph\n0 10 0\n0 0 20\n0 -30 0\nEnter the Source Vertex : 1\nNegative weight cycle detected.\n*/\n<fim_middle>"
+      },
+      {
+        "model_name": "google/codegemma-7b",
+        "predicted_comment": "algorithm",
+        "masked_code": "<|fim_prefix|>/*Write a program to find the shortest path between vertices using \nbellman-ford algorithm.*/\n\n//bellman ford<|fim_suffix|>\n\nimport java.util.*;\npublic class BellmanFord {\n    private static int N;\n    private static int[][] graph;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Enter the number of Vertices : \");\n        N = sc.nextInt();\n        System.out.println(\"Enter the Weight Matrix of Graph\");\n        graph = new int[N][N];\n        for (int i = 0; i < N; i++)\n            for (int j = 0; j < N; j++)\n                graph[i][j] = sc.nextInt();\n        System.out.print(\"Enter the Source Vertex : \");\n        int source = sc.nextInt();\n        bellmanFord(source - 1);\n    }\n\n    public static void bellmanFord(int src) {\n        int[] dist = new int[N];\n        Arrays.fill(dist, Integer.MAX_VALUE);\n        dist[src] = 0;\n        for (int i = 0; i < N; i++) {\n            for (int u = 0; u < N; u++) {\n                for (int v = 0; v < N; v++) {\n                    if (graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {\n                        dist[v] = dist[u] + graph[u][v];\n                    }\n                }\n            }\n        }\n        for (int u = 0; u < N; u++) {\n            for (int v = 0; v < N; v++) {\n                if (graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {\n                    System.out.println(\"Negative weight cycle detected.\");\n                    return;\n                }\n            }\n        }\n        printSolution(dist);\n    }\n\n    public static void printSolution(int[] dist) {\n        System.out.println(\"Vertex \\t Distance from Source\");\n        for (int i = 0; i < N; i++) {\n            System.out.println((i + 1) + \"\\t\\t\" + dist[i]);\n        }\n    }\n}\n\n\n/*output:-\nEnter the number of Vertices : 5\nEnter the Weight Matrix of Graph\n0 6 0 7 0\n0 0 5 8 -4\n0 0 0 0 0\n0 0 -3 0 9\n2 0 0 0 0\nEnter the Source Vertex : 1\nVertex   Distance from Source\n1               0\n2               6\n3               4\n4               7\n5               2\n*/\n\n\n/*Enter the number of Vertices : 3\nEnter the Weight Matrix of Graph\n0 10 5\n0 0 -8\n0 0 0\nEnter the Source Vertex : 1\nVertex   Distance from Source\n1               0\n2               10\n3               2\n*/\n\n\n/*\nEnter the number of Vertices : 3\nEnter the Weight Matrix of Graph\n0 10 0\n0 0 20\n0 -30 0\nEnter the Source Vertex : 1\nNegative weight cycle detected.\n*/\n<|fim_middle|>"
+      },
+      {
+        "model_name": "ibm-granite/granite-8b-code-base",
+        "predicted_comment": "d algorithm",
+        "masked_code": "<fim_prefix>/*Write a program to find the shortest path between vertices using \nbellman-ford algorithm.*/\n\n//bellman for<fim_suffix>\n\nimport java.util.*;\npublic class BellmanFord {\n    private static int N;\n    private static int[][] graph;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Enter the number of Vertices : \");\n        N = sc.nextInt();\n        System.out.println(\"Enter the Weight Matrix of Graph\");\n        graph = new int[N][N];\n        for (int i = 0; i < N; i++)\n            for (int j = 0; j < N; j++)\n                graph[i][j] = sc.nextInt();\n        System.out.print(\"Enter the Source Vertex : \");\n        int source = sc.nextInt();\n        bellmanFord(source - 1);\n    }\n\n    public static void bellmanFord(int src) {\n        int[] dist = new int[N];\n        Arrays.fill(dist, Integer.MAX_VALUE);\n        dist[src] = 0;\n        for (int i = 0; i < N; i++) {\n            for (int u = 0; u < N; u++) {\n                for (int v = 0; v < N; v++) {\n                    if (graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {\n                        dist[v] = dist[u] + graph[u][v];\n                    }\n                }\n            }\n        }\n        for (int u = 0; u < N; u++) {\n            for (int v = 0; v < N; v++) {\n                if (graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {\n                    System.out.println(\"Negative weight cycle detected.\");\n                    return;\n                }\n            }\n        }\n        printSolution(dist);\n    }\n\n    public static void printSolution(int[] dist) {\n        System.out.println(\"Vertex \\t Distance from Source\");\n        for (int i = 0; i < N; i++) {\n            System.out.println((i + 1) + \"\\t\\t\" + dist[i]);\n        }\n    }\n}\n\n\n/*output:-\nEnter the number of Vertices : 5\nEnter the Weight Matrix of Graph\n0 6 0 7 0\n0 0 5 8 -4\n0 0 0 0 0\n0 0 -3 0 9\n2 0 0 0 0\nEnter the Source Vertex : 1\nVertex   Distance from Source\n1               0\n2               6\n3               4\n4               7\n5               2\n*/\n\n\n/*Enter the number of Vertices : 3\nEnter the Weight Matrix of Graph\n0 10 5\n0 0 -8\n0 0 0\nEnter the Source Vertex : 1\nVertex   Distance from Source\n1               0\n2               10\n3               2\n*/\n\n\n/*\nEnter the number of Vertices : 3\nEnter the Weight Matrix of Graph\n0 10 0\n0 0 20\n0 -30 0\nEnter the Source Vertex : 1\nNegative weight cycle detected.\n*/\n<fim_middle>"
+      },
+      {
+        "model_name": "meta-llama/CodeLlama-7b-hf",
+        "predicted_comment": "algorithm\n\n//Time complexity: O(V*E)\n\n//Space complexity: O(V)",
+        "masked_code": "<PRE> /*Write a program to find the shortest path between vertices using \nbellman-ford algorithm.*/\n\n//bellman ford <SUF>\n\nimport java.util.*;\npublic class BellmanFord {\n    private static int N;\n    private static int[][] graph;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Enter the number of Vertices : \");\n        N = sc.nextInt();\n        System.out.println(\"Enter the Weight Matrix of Graph\");\n        graph = new int[N][N];\n        for (int i = 0; i < N; i++)\n            for (int j = 0; j < N; j++)\n                graph[i][j] = sc.nextInt();\n        System.out.print(\"Enter the Source Vertex : \");\n        int source = sc.nextInt();\n        bellmanFord(source - 1);\n    }\n\n    public static void bellmanFord(int src) {\n        int[] dist = new int[N];\n        Arrays.fill(dist, Integer.MAX_VALUE);\n        dist[src] = 0;\n        for (int i = 0; i < N; i++) {\n            for (int u = 0; u < N; u++) {\n                for (int v = 0; v < N; v++) {\n                    if (graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {\n                        dist[v] = dist[u] + graph[u][v];\n                    }\n                }\n            }\n        }\n        for (int u = 0; u < N; u++) {\n            for (int v = 0; v < N; v++) {\n                if (graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {\n                    System.out.println(\"Negative weight cycle detected.\");\n                    return;\n                }\n            }\n        }\n        printSolution(dist);\n    }\n\n    public static void printSolution(int[] dist) {\n        System.out.println(\"Vertex \\t Distance from Source\");\n        for (int i = 0; i < N; i++) {\n            System.out.println((i + 1) + \"\\t\\t\" + dist[i]);\n        }\n    }\n}\n\n\n/*output:-\nEnter the number of Vertices : 5\nEnter the Weight Matrix of Graph\n0 6 0 7 0\n0 0 5 8 -4\n0 0 0 0 0\n0 0 -3 0 9\n2 0 0 0 0\nEnter the Source Vertex : 1\nVertex   Distance from Source\n1               0\n2               6\n3               4\n4               7\n5               2\n*/\n\n\n/*Enter the number of Vertices : 3\nEnter the Weight Matrix of Graph\n0 10 5\n0 0 -8\n0 0 0\nEnter the Source Vertex : 1\nVertex   Distance from Source\n1               0\n2               10\n3               2\n*/\n\n\n/*\nEnter the number of Vertices : 3\nEnter the Weight Matrix of Graph\n0 10 0\n0 0 20\n0 -30 0\nEnter the Source Vertex : 1\nNegative weight cycle detected.\n*/\n <MID>"
+      }
+    ],
+    "judge_evaluations": {
+      "evaluations": [
+        {
+          "model_name": "Qwen/CodeQwen1.5-7B",
+          "errors": [],
+          "explanation": "The comment is accurate, well-structured, and provides a clear explanation of the Bellman-Ford algorithm including its initialization and relaxation steps. No errors detected."
+        },
+        {
+          "model_name": "bigcode/starcoder2-7b",
+          "errors": [
+            "SE-MD"
+          ],
+          "explanation": "While the time and space complexity information is correct, the comment lacks explanation of what the algorithm does or its purpose, making it too minimal for proper documentation."
+        },
+        {
+          "model_name": "google/codegemma-7b",
+          "errors": [
+            "SE-MD"
+          ],
+          "explanation": "The comment is extremely minimal, containing only the word 'algorithm' without any description of functionality or purpose."
+        },
+        {
+          "model_name": "ibm-granite/granite-8b-code-base",
+          "errors": [
+            "SE-MD"
+          ],
+          "explanation": "The comment is extremely minimal, containing only 'd algorithm' without any meaningful description of the algorithm's purpose or functionality."
+        },
+        {
+          "model_name": "meta-llama/CodeLlama-7b-hf",
+          "errors": [
+            "SE-MD"
+          ],
+          "explanation": "While the comment includes time and space complexity, it lacks description of what the algorithm does or its purpose, making it insufficient for proper documentation."
+        }
+      ]
+    }
+  },
+  {
+    "instance_id": "294_12",
+    "metadata": {
+      "file_id": "294_12",
+      "language": "English"
+    },
+    "code_context": {
+      "source_code": "package _2017._09._assignments.projectgo.template.v2;\n\n//imports\nimport javafx.application.Application;\nimport javafx.scene.Scene;\nimport javafx.scene.layout.BorderPane;\nimport javafx.stage.Stage;\n\n//class defnition f\npublic class Go extends Application {\n\t\n\t// private fields \n\tprivate BorderPane bp_layout;\n\tprivate GoCustomControl customControl;\n\tprivate GoControlPanel controlPanel;\n\tprivate GoGameLogic gameLogic; \n\tprivate GoBoard board; \n\t\n\t// overridden init method\n\tpublic void init() {\n\t\tbp_layout = new BorderPane();\t\t\t\t    // create layout\n\t\tboard = new GoBoard();\t\t\t\t\t        // creates a board\n\t\tgameLogic = new GoGameLogic(board); \t        // create gameLogic and pass board to gameLogic so gameLogic can call methods from board\n\t\tcustomControl = new GoCustomControl(gameLogic); // create customControl and pass gameLogic to customControl so customControl can call methods from gameLogic\n\t\tcontrolPanel = new GoControlPanel(gameLogic);   // create controlPanel and pass gameLogic to controlPanel so customControl can call methods from gameLogic\n\t\tbp_layout.setCenter(customControl);\t\t\t\t// put the customControl in the center of the layout\n\t\tbp_layout.setLeft(controlPanel);\t\t\t\t// put the controlPanel in the right of the layout\n\t}\n\n\t// overridden start method\n\tpublic void start(Stage primaryStage) {\n\t\t// set a title, size and the stack pane as the root of the scene graph\n\t\tprimaryStage.setTitle(\"Go\");\n\t\tprimaryStage.setScene(new Scene(bp_layout, 1000, 800));\n\t\tprimaryStage.show();\n\t}\n\n\t// overridden stop method\n\tpublic void stop() {\n\t\tSystem.out.println(\"Application closed\");\n\t}\n\n\t// entry point into our program for launching our javafx applicaton\n\tpublic static void main(String[] args) {\n\t\t//T1\n\t\tlaunch(args);\n\t}\n}\n\n\n\n\n",
+      "original_comment": "// set a title, size and the stack pane as the root of the scene graph"
+    },
+    "model_predictions": [
+      {
+        "model_name": "Qwen/CodeQwen1.5-7B",
+        "predicted_comment": "for the stage",
+        "masked_code": "<fim_prefix>package _2017._09._assignments.projectgo.template.v2;\n\n//imports\nimport javafx.application.Application;\nimport javafx.scene.Scene;\nimport javafx.scene.layout.BorderPane;\nimport javafx.stage.Stage;\n\n//class defnition f\npublic class Go extends Application {\n\t\n\t// private fields \n\tprivate BorderPane bp_layout;\n\tprivate GoCustomControl customControl;\n\tprivate GoControlPanel controlPanel;\n\tprivate GoGameLogic gameLogic; \n\tprivate GoBoard board; \n\t\n\t// overridden init method\n\tpublic void init() {\n\t\tbp_layout = new BorderPane();\t\t\t\t    // create layout\n\t\tboard = new GoBoard();\t\t\t\t\t        // creates a board\n\t\tgameLogic = new GoGameLogic(board); \t        // create gameLogic and pass board to gameLogic so gameLogic can call methods from board\n\t\tcustomControl = new GoCustomControl(gameLogic); // create customControl and pass gameLogic to customControl so customControl can call methods from gameLogic\n\t\tcontrolPanel = new GoControlPanel(gameLogic);   // create controlPanel and pass gameLogic to controlPanel so customControl can call methods from gameLogic\n\t\tbp_layout.setCenter(customControl);\t\t\t\t// put the customControl in the center of the layout\n\t\tbp_layout.setLeft(controlPanel);\t\t\t\t// put the controlPanel in the right of the layout\n\t}\n\n\t// overridden start method\n\tpublic void start(Stage primaryStage) {\n\t\t// set a title<fim_suffix>\n\t\tprimaryStage.setTitle(\"Go\");\n\t\tprimaryStage.setScene(new Scene(bp_layout, 1000, 800));\n\t\tprimaryStage.show();\n\t}\n\n\t// overridden stop method\n\tpublic void stop() {\n\t\tSystem.out.println(\"Application closed\");\n\t}\n\n\t// entry point into our program for launching our javafx applicaton\n\tpublic static void main(String[] args) {\n\t\t//T1\n\t\tlaunch(args);\n\t}\n}\n\n\n\n\n<fim_middle>"
+      },
+      {
+        "model_name": "bigcode/starcoder2-7b",
+        "predicted_comment": "for the stage",
+        "masked_code": "<fim_prefix>package _2017._09._assignments.projectgo.template.v2;\n\n//imports\nimport javafx.application.Application;\nimport javafx.scene.Scene;\nimport javafx.scene.layout.BorderPane;\nimport javafx.stage.Stage;\n\n//class defnition f\npublic class Go extends Application {\n\t\n\t// private fields \n\tprivate BorderPane bp_layout;\n\tprivate GoCustomControl customControl;\n\tprivate GoControlPanel controlPanel;\n\tprivate GoGameLogic gameLogic; \n\tprivate GoBoard board; \n\t\n\t// overridden init method\n\tpublic void init() {\n\t\tbp_layout = new BorderPane();\t\t\t\t    // create layout\n\t\tboard = new GoBoard();\t\t\t\t\t        // creates a board\n\t\tgameLogic = new GoGameLogic(board); \t        // create gameLogic and pass board to gameLogic so gameLogic can call methods from board\n\t\tcustomControl = new GoCustomControl(gameLogic); // create customControl and pass gameLogic to customControl so customControl can call methods from gameLogic\n\t\tcontrolPanel = new GoControlPanel(gameLogic);   // create controlPanel and pass gameLogic to controlPanel so customControl can call methods from gameLogic\n\t\tbp_layout.setCenter(customControl);\t\t\t\t// put the customControl in the center of the layout\n\t\tbp_layout.setLeft(controlPanel);\t\t\t\t// put the controlPanel in the right of the layout\n\t}\n\n\t// overridden start method\n\tpublic void start(Stage primaryStage) {\n\t\t// set a title<fim_suffix>\n\t\tprimaryStage.setTitle(\"Go\");\n\t\tprimaryStage.setScene(new Scene(bp_layout, 1000, 800));\n\t\tprimaryStage.show();\n\t}\n\n\t// overridden stop method\n\tpublic void stop() {\n\t\tSystem.out.println(\"Application closed\");\n\t}\n\n\t// entry point into our program for launching our javafx applicaton\n\tpublic static void main(String[] args) {\n\t\t//T1\n\t\tlaunch(args);\n\t}\n}\n\n\n\n\n<fim_middle>"
+      },
+      {
+        "model_name": "google/codegemma-7b",
+        "predicted_comment": "and add the layout to the scene",
+        "masked_code": "<|fim_prefix|>package _2017._09._assignments.projectgo.template.v2;\n\n//imports\nimport javafx.application.Application;\nimport javafx.scene.Scene;\nimport javafx.scene.layout.BorderPane;\nimport javafx.stage.Stage;\n\n//class defnition f\npublic class Go extends Application {\n\t\n\t// private fields \n\tprivate BorderPane bp_layout;\n\tprivate GoCustomControl customControl;\n\tprivate GoControlPanel controlPanel;\n\tprivate GoGameLogic gameLogic; \n\tprivate GoBoard board; \n\t\n\t// overridden init method\n\tpublic void init() {\n\t\tbp_layout = new BorderPane();\t\t\t\t    // create layout\n\t\tboard = new GoBoard();\t\t\t\t\t        // creates a board\n\t\tgameLogic = new GoGameLogic(board); \t        // create gameLogic and pass board to gameLogic so gameLogic can call methods from board\n\t\tcustomControl = new GoCustomControl(gameLogic); // create customControl and pass gameLogic to customControl so customControl can call methods from gameLogic\n\t\tcontrolPanel = new GoControlPanel(gameLogic);   // create controlPanel and pass gameLogic to controlPanel so customControl can call methods from gameLogic\n\t\tbp_layout.setCenter(customControl);\t\t\t\t// put the customControl in the center of the layout\n\t\tbp_layout.setLeft(controlPanel);\t\t\t\t// put the controlPanel in the right of the layout\n\t}\n\n\t// overridden start method\n\tpublic void start(Stage primaryStage) {\n\t\t// set a title<|fim_suffix|>\n\t\tprimaryStage.setTitle(\"Go\");\n\t\tprimaryStage.setScene(new Scene(bp_layout, 1000, 800));\n\t\tprimaryStage.show();\n\t}\n\n\t// overridden stop method\n\tpublic void stop() {\n\t\tSystem.out.println(\"Application closed\");\n\t}\n\n\t// entry point into our program for launching our javafx applicaton\n\tpublic static void main(String[] args) {\n\t\t//T1\n\t\tlaunch(args);\n\t}\n}\n\n\n\n\n<|fim_middle|>"
+      },
+      {
+        "model_name": "ibm-granite/granite-8b-code-base",
+        "predicted_comment": "for the stage",
+        "masked_code": "<fim_prefix>package _2017._09._assignments.projectgo.template.v2;\n\n//imports\nimport javafx.application.Application;\nimport javafx.scene.Scene;\nimport javafx.scene.layout.BorderPane;\nimport javafx.stage.Stage;\n\n//class defnition f\npublic class Go extends Application {\n\t\n\t// private fields \n\tprivate BorderPane bp_layout;\n\tprivate GoCustomControl customControl;\n\tprivate GoControlPanel controlPanel;\n\tprivate GoGameLogic gameLogic; \n\tprivate GoBoard board; \n\t\n\t// overridden init method\n\tpublic void init() {\n\t\tbp_layout = new BorderPane();\t\t\t\t    // create layout\n\t\tboard = new GoBoard();\t\t\t\t\t        // creates a board\n\t\tgameLogic = new GoGameLogic(board); \t        // create gameLogic and pass board to gameLogic so gameLogic can call methods from board\n\t\tcustomControl = new GoCustomControl(gameLogic); // create customControl and pass gameLogic to customControl so customControl can call methods from gameLogic\n\t\tcontrolPanel = new GoControlPanel(gameLogic);   // create controlPanel and pass gameLogic to controlPanel so customControl can call methods from gameLogic\n\t\tbp_layout.setCenter(customControl);\t\t\t\t// put the customControl in the center of the layout\n\t\tbp_layout.setLeft(controlPanel);\t\t\t\t// put the controlPanel in the right of the layout\n\t}\n\n\t// overridden start method\n\tpublic void start(Stage primaryStage) {\n\t\t// set a title<fim_suffix>\n\t\tprimaryStage.setTitle(\"Go\");\n\t\tprimaryStage.setScene(new Scene(bp_layout, 1000, 800));\n\t\tprimaryStage.show();\n\t}\n\n\t// overridden stop method\n\tpublic void stop() {\n\t\tSystem.out.println(\"Application closed\");\n\t}\n\n\t// entry point into our program for launching our javafx applicaton\n\tpublic static void main(String[] args) {\n\t\t//T1\n\t\tlaunch(args);\n\t}\n}\n\n\n\n\n<fim_middle>"
+      },
+      {
+        "model_name": "meta-llama/CodeLlama-7b-hf",
+        "predicted_comment": "for the stage",
+        "masked_code": "<PRE> package _2017._09._assignments.projectgo.template.v2;\n\n//imports\nimport javafx.application.Application;\nimport javafx.scene.Scene;\nimport javafx.scene.layout.BorderPane;\nimport javafx.stage.Stage;\n\n//class defnition f\npublic class Go extends Application {\n\t\n\t// private fields \n\tprivate BorderPane bp_layout;\n\tprivate GoCustomControl customControl;\n\tprivate GoControlPanel controlPanel;\n\tprivate GoGameLogic gameLogic; \n\tprivate GoBoard board; \n\t\n\t// overridden init method\n\tpublic void init() {\n\t\tbp_layout = new BorderPane();\t\t\t\t    // create layout\n\t\tboard = new GoBoard();\t\t\t\t\t        // creates a board\n\t\tgameLogic = new GoGameLogic(board); \t        // create gameLogic and pass board to gameLogic so gameLogic can call methods from board\n\t\tcustomControl = new GoCustomControl(gameLogic); // create customControl and pass gameLogic to customControl so customControl can call methods from gameLogic\n\t\tcontrolPanel = new GoControlPanel(gameLogic);   // create controlPanel and pass gameLogic to controlPanel so customControl can call methods from gameLogic\n\t\tbp_layout.setCenter(customControl);\t\t\t\t// put the customControl in the center of the layout\n\t\tbp_layout.setLeft(controlPanel);\t\t\t\t// put the controlPanel in the right of the layout\n\t}\n\n\t// overridden start method\n\tpublic void start(Stage primaryStage) {\n\t\t// set a title <SUF>\n\t\tprimaryStage.setTitle(\"Go\");\n\t\tprimaryStage.setScene(new Scene(bp_layout, 1000, 800));\n\t\tprimaryStage.show();\n\t}\n\n\t// overridden stop method\n\tpublic void stop() {\n\t\tSystem.out.println(\"Application closed\");\n\t}\n\n\t// entry point into our program for launching our javafx applicaton\n\tpublic static void main(String[] args) {\n\t\t//T1\n\t\tlaunch(args);\n\t}\n}\n\n\n\n\n <MID>"
+      }
+    ],
+    "judge_evaluations": {
+      "evaluations": [
+        {
+          "model_name": "Qwen/CodeQwen1.5-7B",
+          "errors": [
+            "SE-MD"
+          ],
+          "explanation": "The comment 'for the stage' is too brief and misses important details about setting the size and stack pane as root of the scene graph."
+        },
+        {
+          "model_name": "bigcode/starcoder2-7b",
+          "errors": [
+            "SE-MD"
+          ],
+          "explanation": "The comment 'for the stage' is too brief and misses important details about setting the size and stack pane as root of the scene graph."
+        },
+        {
+          "model_name": "google/codegemma-7b",
+          "errors": [
+            "SE-MD",
+            "SE-HA3"
+          ],
+          "explanation": "The comment 'and add the layout to the scene' misses the title and size setting details. It also makes an educated guess about adding layout that doesn't fully match the original comment's intent."
+        },
+        {
+          "model_name": "ibm-granite/granite-8b-code-base",
+          "errors": [
+            "SE-MD"
+          ],
+          "explanation": "The comment 'for the stage' is too brief and misses important details about setting the size and stack pane as root of the scene graph."
+        },
+        {
+          "model_name": "meta-llama/CodeLlama-7b-hf",
+          "errors": [
+            "SE-MD"
+          ],
+          "explanation": "The comment 'for the stage' is too brief and misses important details about setting the size and stack pane as root of the scene graph."
+        }
+      ]
+    }
+  },
+  {
+    "instance_id": "1566_0",
+    "metadata": {
+      "file_id": "1566_0",
+      "language": "English"
+    },
+    "code_context": {
+      "source_code": "//2-Given sides of a triangle, check whether the triangle is equilateral, isosceles or scalene. Find it's area\nimport java.util.Scanner;\n\npublic class Triangle {\n    public static void main(String[] args) {\n        int a, b, c;\n        double p, area;\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Enter sides of triangle : \");\n        a = sc.nextInt();\n        b = sc.nextInt();\n        c = sc.nextInt();\n\n        if((a < b + c) && (b < a + c) && (c < a + b)){\n            if((a == b) && (b == c))\n                System.out.println(\"Given Trangle is Equilateral\");\n            else if ((a == b) || (b == c) || (c == a))\n                System.out.println(\"Given Triangle is Isoscleles\");\n            else\n                System.out.println(\"Given Triangle is Scalane\");\n        p=(a+b+c)/2;\n        area = Math.sqrt(p * (p - a) * (p - b) * (p - c));\n        System.out.println(\"Area of triangle is = \" + area);\n        }else{\n            System.out.println(\"Cannot form a triangle\");\n        }\n    }\n}\n",
+      "original_comment": "//2-Given sides of a triangle, check whether the triangle is equilateral, isosceles or scalene. Find it's area"
+    },
+    "model_predictions": [
+      {
+        "model_name": "Qwen/CodeQwen1.5-7B",
+        "predicted_comment": "of a triangle, write a program to check whether a triangle is equilateral, isosceles or scalene triangle.\n//3-Write a program to check whether a triangle can be formed by given sides.\n//4-Write a program to find the area of a triangle.\n//5-Write a program to find the perimeter of a triangle.\n//6-Write a program to find the perimeter of a rectangle.\n//7-Write a program to find the area of a rectangle.\n//8-Write a program to find the perimeter of",
+        "masked_code": "<fim_prefix>//2-Given sides<fim_suffix>\nimport java.util.Scanner;\n\npublic class Triangle {\n    public static void main(String[] args) {\n        int a, b, c;\n        double p, area;\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Enter sides of triangle : \");\n        a = sc.nextInt();\n        b = sc.nextInt();\n        c = sc.nextInt();\n\n        if((a < b + c) && (b < a + c) && (c < a + b)){\n            if((a == b) && (b == c))\n                System.out.println(\"Given Trangle is Equilateral\");\n            else if ((a == b) || (b == c) || (c == a))\n                System.out.println(\"Given Triangle is Isoscleles\");\n            else\n                System.out.println(\"Given Triangle is Scalane\");\n        p=(a+b+c)/2;\n        area = Math.sqrt(p * (p - a) * (p - b) * (p - c));\n        System.out.println(\"Area of triangle is = \" + area);\n        }else{\n            System.out.println(\"Cannot form a triangle\");\n        }\n    }\n}\n<fim_middle>"
+      },
+      {
+        "model_name": "bigcode/starcoder2-7b",
+        "predicted_comment": "triangle : \");\n        //a = sc.nextInt();\n        //b = sc.nextInt();\n        //c = sc.nextInt();\n\n        if((a < b + c) && (b < a + c) && (c < a + b)){\n            if((a == b) && (b == c))\n                System.out.println(\"Given Trangle is Equilateral\");\n            else if ((a",
+        "masked_code": "<fim_prefix>//2-Given sides of<fim_suffix>\nimport java.util.Scanner;\n\npublic class Triangle {\n    public static void main(String[] args) {\n        int a, b, c;\n        double p, area;\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Enter sides of triangle : \");\n        a = sc.nextInt();\n        b = sc.nextInt();\n        c = sc.nextInt();\n\n        if((a < b + c) && (b < a + c) && (c < a + b)){\n            if((a == b) && (b == c))\n                System.out.println(\"Given Trangle is Equilateral\");\n            else if ((a == b) || (b == c) || (c == a))\n                System.out.println(\"Given Triangle is Isoscleles\");\n            else\n                System.out.println(\"Given Triangle is Scalane\");\n        p=(a+b+c)/2;\n        area = Math.sqrt(p * (p - a) * (p - b) * (p - c));\n        System.out.println(\"Area of triangle is = \" + area);\n        }else{\n            System.out.println(\"Cannot form a triangle\");\n        }\n    }\n}\n<fim_middle>"
+      },
+      {
+        "model_name": "google/codegemma-7b",
+        "predicted_comment": "a triangle, check if it is valid or not.\n//If the triangle is valid, then check whether it is an equilateral, isosceles or scalene triangle.\n//If the triangle is invalid, then display an appropriate message.",
+        "masked_code": "<|fim_prefix|>//2-Given sides of<|fim_suffix|>\nimport java.util.Scanner;\n\npublic class Triangle {\n    public static void main(String[] args) {\n        int a, b, c;\n        double p, area;\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Enter sides of triangle : \");\n        a = sc.nextInt();\n        b = sc.nextInt();\n        c = sc.nextInt();\n\n        if((a < b + c) && (b < a + c) && (c < a + b)){\n            if((a == b) && (b == c))\n                System.out.println(\"Given Trangle is Equilateral\");\n            else if ((a == b) || (b == c) || (c == a))\n                System.out.println(\"Given Triangle is Isoscleles\");\n            else\n                System.out.println(\"Given Triangle is Scalane\");\n        p=(a+b+c)/2;\n        area = Math.sqrt(p * (p - a) * (p - b) * (p - c));\n        System.out.println(\"Area of triangle is = \" + area);\n        }else{\n            System.out.println(\"Cannot form a triangle\");\n        }\n    }\n}\n<|fim_middle|>"
+      },
+      {
+        "model_name": "ibm-granite/granite-8b-code-base",
+        "predicted_comment": "triangle : \");\na = sc.nextInt();\nb = sc.nextInt();\nc = sc.nextInt();\n\nif((a < b + c) && (b < a + c) && (c < a + b)){\n    if((a == b) && (b == c))\n        System.out.println(\"Given Trangle is Equilateral\");\n    else if ((a == b)",
+        "masked_code": "<fim_prefix>//2-Given sides of<fim_suffix>\nimport java.util.Scanner;\n\npublic class Triangle {\n    public static void main(String[] args) {\n        int a, b, c;\n        double p, area;\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Enter sides of triangle : \");\n        a = sc.nextInt();\n        b = sc.nextInt();\n        c = sc.nextInt();\n\n        if((a < b + c) && (b < a + c) && (c < a + b)){\n            if((a == b) && (b == c))\n                System.out.println(\"Given Trangle is Equilateral\");\n            else if ((a == b) || (b == c) || (c == a))\n                System.out.println(\"Given Triangle is Isoscleles\");\n            else\n                System.out.println(\"Given Triangle is Scalane\");\n        p=(a+b+c)/2;\n        area = Math.sqrt(p * (p - a) * (p - b) * (p - c));\n        System.out.println(\"Area of triangle is = \" + area);\n        }else{\n            System.out.println(\"Cannot form a triangle\");\n        }\n    }\n}\n<fim_middle>"
+      },
+      {
+        "model_name": "meta-llama/CodeLlama-7b-hf",
+        "predicted_comment": "of a triangle, find the area of the triangle.\n//Input: 3\n//Output: 0.500000\n//Input: 1 1 3\n//Output: 0.500000\n//Input: 1 2 3\n//Output: 0.500000\n//Input: 1 2 1\n//Output: 0.5000",
+        "masked_code": "<PRE> //2-Given sides <SUF>\nimport java.util.Scanner;\n\npublic class Triangle {\n    public static void main(String[] args) {\n        int a, b, c;\n        double p, area;\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Enter sides of triangle : \");\n        a = sc.nextInt();\n        b = sc.nextInt();\n        c = sc.nextInt();\n\n        if((a < b + c) && (b < a + c) && (c < a + b)){\n            if((a == b) && (b == c))\n                System.out.println(\"Given Trangle is Equilateral\");\n            else if ((a == b) || (b == c) || (c == a))\n                System.out.println(\"Given Triangle is Isoscleles\");\n            else\n                System.out.println(\"Given Triangle is Scalane\");\n        p=(a+b+c)/2;\n        area = Math.sqrt(p * (p - a) * (p - b) * (p - c));\n        System.out.println(\"Area of triangle is = \" + area);\n        }else{\n            System.out.println(\"Cannot form a triangle\");\n        }\n    }\n}\n <MID>"
+      }
+    ],
+    "judge_evaluations": {
+      "evaluations": [
+        {
+          "model_name": "Qwen/CodeQwen1.5-7B",
+          "errors": [
+            "MS-LT",
+            "SE-MD"
+          ],
+          "explanation": "The model generates unnecessary additional tasks/requirements beyond the original scope (late termination) and misses mentioning the area calculation requirement in its main description (missing details)."
+        },
+        {
+          "model_name": "bigcode/starcoder2-7b",
+          "errors": [
+            "SE-CS1",
+            "SE-MD"
+          ],
+          "explanation": "The model outputs commented-out code instead of a proper comment description, and fails to describe the purpose of the program."
+        },
+        {
+          "model_name": "google/codegemma-7b",
+          "errors": [
+            "SE-MD"
+          ],
+          "explanation": "The comment misses mentioning the area calculation requirement, which is a key functionality of the program."
+        },
+        {
+          "model_name": "ibm-granite/granite-8b-code-base",
+          "errors": [
+            "SE-CS1",
+            "SE-MD"
+          ],
+          "explanation": "The model outputs code snippets instead of a proper comment, and fails to describe the purpose of the program."
+        },
+        {
+          "model_name": "meta-llama/CodeLlama-7b-hf",
+          "errors": [
+            "SE-MD",
+            "MS-LT"
+          ],
+          "explanation": "The comment focuses only on the area calculation aspect while missing the triangle type classification requirement. It also includes unnecessary input/output examples (late termination)."
+        }
+      ]
+    }
+  }
+]

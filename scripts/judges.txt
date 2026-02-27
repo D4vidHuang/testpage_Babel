@@ -1,0 +1,5 @@
+openai/gpt-oss-20b, pl, pl
+openai/gpt-oss-20b, en, en
+openai/gpt-oss-20b, zh, zh
+openai/gpt-oss-20b, nl, nl
+openai/gpt-oss-20b, el, el

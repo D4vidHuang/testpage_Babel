@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMSE-Babel — Visualization Dashboard</title>
+  <meta name="description"
+    content="Central visualization portal for the EMSE-Babel multilingual code comment evaluation study." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* ── TU Delft Brand Colors ─────────────────────────────────────────────────
+       Primary:   Cyan #00A6D6  |  Black #000000  |  White #FFFFFF
+       Secondary: Dark blue #0C2340  |  Royal blue #0076C2  |  Turquoise #00B8C8
+                  Pink #EF60A3  |  Light purple #6F1D77  |  Red #E03C31
+                  Yellow #FFB81C  |  Forest green #009B77  |  Dark grey #5C5C5C
+    ─────────────────────────────────────────────────────────────────────────── */
+    :root {
+      /* Core */
+      --tud-cyan: #00A6D6;
+      --tud-darkblue: #0C2340;
+      --tud-royalblue: #0076C2;
+      --tud-turquoise: #00B8C8;
+      --tud-pink: #EF60A3;
+      --tud-purple: #6F1D77;
+      --tud-red: #E03C31;
+      --tud-yellow: #FFB81C;
+      --tud-green: #009B77;
+      --tud-grey: #5C5C5C;
+
+      /* UI mapping */
+      --bg: #0C2340;
+      /* dark blue — page background */
+      --bg2: #0f2d50;
+      /* cards */
+      --bg3: #133460;
+      /* hover states */
+      --border: #1e4170;
+      --border2: #183a66;
+      --text: #f0f4f8;
+      --text2: #a8c0d6;
+      --text3: #6b8faa;
+      --accent: #00A6D6;
+      /* primary cyan */
+      --accent2: #0076C2;
+      /* royal blue */
+      --accent3: #00B8C8;
+      /* turquoise */
+      --green: #009B77;
+      --yellow: #FFB81C;
+      --purple: #6F1D77;
+      --pink: #EF60A3;
+      --red: #E03C31;
+      --radius: 12px;
+      --radius-sm: 7px;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+      --glow: 0 0 28px rgba(0, 166, 214, 0.15);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Top nav ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(12, 35, 64, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.3px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-brand .logo-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--tud-darkblue);
+    }
+
+    .nav-brand .badge {
+      background: var(--accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: var(--tud-darkblue);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 4px;
+    }
+
+    .nav-links a {
+      color: var(--text2);
+      text-decoration: none;
+      padding: 5px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      transition: background .15s, color .15s;
+    }
+
+    .nav-links a:hover {
+      background: var(--bg3);
+      color: var(--accent);
+    }
+
+    /* ── Hero ───────────────────────────────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 72px 32px 52px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 75% 50% at 50% -10%,
+          rgba(0, 166, 214, 0.22) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 166, 214, 0.12);
+      border: 1px solid rgba(0, 166, 214, 0.35);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 4.5vw, 52px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--text2);
+      letter-spacing: -0.2px;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      color: var(--text2);
+      font-size: 14px;
+      max-width: 540px;
+      margin: 0 auto 36px;
+      line-height: 1.75;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      max-width: 680px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .stat {
+      flex: 1;
+      min-width: 100px;
+      text-align: center;
+      padding: 18px 12px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:last-child {
+      border-right: none;
+    }
+
+    .stat-num {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      color: var(--text3);
+      font-size: 10px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ── Main ───────────────────────────────────────────────────────────────── */
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Quick strip ────────────────────────────────────────────────────────── */
+    .quick-strip {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 28px 0 6px;
+    }
+
+    .quick-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: filter .15s, transform .15s;
+      border: 1px solid transparent;
+    }
+
+    .quick-btn:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    .qb-cyan {
+      background: rgba(0, 166, 214, 0.15);
+      color: var(--accent);
+      border-color: rgba(0, 166, 214, 0.25);
+    }
+
+    .qb-teal {
+      background: rgba(0, 184, 200, 0.15);
+      color: var(--accent3);
+      border-color: rgba(0, 184, 200, 0.25);
+    }
+
+    .qb-green {
+      background: rgba(0, 155, 119, 0.15);
+      color: var(--green);
+      border-color: rgba(0, 155, 119, 0.25);
+    }
+
+    .qb-pink {
+      background: rgba(239, 96, 163, 0.15);
+      color: var(--pink);
+      border-color: rgba(239, 96, 163, 0.25);
+    }
+
+    .qb-yellow {
+      background: rgba(255, 184, 28, 0.15);
+      color: var(--yellow);
+      border-color: rgba(255, 184, 28, 0.25);
+    }
+
+    /* ── Section header ─────────────────────────────────────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 36px 0 16px;
+    }
+
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .icon-cyan {
+      background: rgba(0, 166, 214, 0.15);
+    }
+
+    .icon-green {
+      background: rgba(0, 155, 119, 0.15);
+    }
+
+    .icon-purple {
+      background: rgba(111, 29, 119, 0.2);
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      color: #fff;
+    }
+
+    .section-desc {
+      color: var(--text3);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .section-divider {
+      flex: 1;
+      height: 1px;
+      margin-left: 8px;
+      background: linear-gradient(to right, var(--border), transparent);
+    }
+
+    /* ── Card grid ──────────────────────────────────────────────────────────── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 14px;
+    }
+
+    /* ── Card ───────────────────────────────────────────────────────────────── */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow), var(--glow);
+      transform: translateY(-2px);
+    }
+
+    .card-accent-bar {
+      height: 3px;
+      width: 100%;
+    }
+
+    .bar-cyan {
+      background: var(--tud-cyan);
+    }
+
+    .bar-royal {
+      background: var(--tud-royalblue);
+    }
+
+    .bar-turq {
+      background: var(--tud-turquoise);
+    }
+
+    .bar-green {
+      background: var(--tud-green);
+    }
+
+    .bar-purple {
+      background: linear-gradient(90deg, var(--tud-purple), var(--tud-pink));
+    }
+
+    .card-body {
+      padding: 18px 20px 12px;
+      flex: 1;
+    }
+
+    .card-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .card-icon {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .card-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      text-transform: uppercase;
+    }
+
+    .badge-plotly {
+      background: rgba(0, 118, 194, 0.2);
+      color: #4db6e8;
+      border: 1px solid rgba(0, 118, 194, 0.3);
+    }
+
+    .badge-bokeh {
+      background: rgba(239, 96, 163, 0.15);
+      color: var(--pink);
+      border: 1px solid rgba(239, 96, 163, 0.25);
+    }
+
+    .card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      margin-bottom: 5px;
+      line-height: 1.35;
+      color: #fff;
+    }
+
+    .card-desc {
+      color: var(--text2);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px 13px;
+      border-top: 1px solid var(--border2);
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text3);
+      border: 1px solid var(--border);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      padding: 2px 7px;
+      border-radius: 20px;
+    }
+
+    .card-arrow {
+      margin-left: auto;
+      color: var(--text3);
+      font-size: 14px;
+      transition: transform .2s, color .2s;
+    }
+
+    .card:hover .card-arrow {
+      transform: translateX(3px);
+      color: var(--accent);
+    }
+
+    /* ── CM card grid (4 per row for language×setting combos) ───────────────── */
+    .cm-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .cm-card {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      text-decoration: none;
+      color: var(--text2);
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+
+    .cm-card:hover {
+      background: var(--bg3);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .cm-card .cm-lang {
+      font-size: 15px;
+    }
+
+    .cm-card .cm-arrow {
+      margin-left: auto;
+      opacity: 0.5;
+      font-size: 12px;
+    }
+
+    /* ── Language selector group ────────────────────────────────────────────── */
+    .lang-group {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .lang-group-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border2);
+      background: rgba(0, 166, 214, 0.04);
+    }
+
+    .lang-group-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .lang-group-desc {
+      color: var(--text2);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .lang-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .lang-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px 10px;
+      text-decoration: none;
+      color: var(--text2);
+      border-right: 1px solid var(--border2);
+      transition: background .15s, color .15s;
+      position: relative;
+    }
+
+    .lang-item:last-child {
+      border-right: none;
+    }
+
+    .lang-item:hover {
+      background: var(--bg3);
+      color: var(--accent);
+    }
+
+    .lang-item:hover .lang-flag {
+      transform: scale(1.2);
+    }
+
+    .lang-flag {
+      font-size: 26px;
+      margin-bottom: 6px;
+      transition: transform .2s;
+    }
+
+    .lang-name {
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .lang-sub {
+      font-size: 10px;
+      color: var(--text3);
+      margin-top: 2px;
+    }
+
+    .lang-sub-links {
+      display: flex;
+      gap: 6px;
+      padding: 12px 20px;
+      border-top: 1px solid var(--border2);
+      flex-wrap: wrap;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .lang-sub-label {
+      color: var(--text3);
+      font-size: 11px;
+      margin-right: 4px;
+      white-space: nowrap;
+    }
+
+    .lang-link {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 5px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      color: var(--text2);
+      transition: background .15s, color .15s, border-color .15s;
+    }
+
+    .lang-link:hover {
+      background: var(--accent2);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: var(--text3);
+      font-size: 12px;
+      border-top: 1px solid var(--border2);
+    }
+
+    footer code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      border: 1px solid var(--border2);
+      color: var(--accent3);
+    }
+
+    .footer-tudelft {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 166, 214, 0.1);
+      border: 1px solid rgba(0, 166, 214, 0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    [id] {
+      scroll-margin-top: 72px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Navigation ─────────────────────────────────────────────────────────── -->
+  <nav>
+    <a class="nav-brand" href="#">
+      <div class="logo-mark">E</div>
+      <span>EMSE-Babel</span>
+      <span class="badge">TU Delft</span>
+    </a>
+    <a href="#llm-judge" data-en="LLM-as-a-Judge" data-zh="LLM 评测" data-nl="LLM-als-beoordelaar" data-el="LLM-ως-κριτής"
+      data-pl="LLM jako sędzia">LLM-as-a-Judge</a>
+    <a href="#neural" data-en="Neural Metrics" data-zh="神经指标" data-nl="Neurale metrieken" data-el="Νευρωνικές μετρικές"
+      data-pl="Metryki neuronowe">Neural Metrics</a>
+    <a href="#legacy" data-en="Legacy" data-zh="遗留视图" data-nl="Legacy" data-el="Προηγούμενα"
+      data-pl="Poprzednie">Legacy</a>
+    <select id="lang-select"
+      style="background: var(--bg3); color: var(--accent); border: 1px solid var(--accent); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; margin-left: 10px; outline: none; transition: border-color .15s;">
+      <option value="en">English</option>
+      <option value="zh">中文</option>
+      <option value="nl">Nederlands</option>
+      <option value="el">Ελληνικά</option>
+      <option value="pl">Polski</option>
+    </select>
+  </nav>
+
+  <!-- ── Hero ──────────────────────────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="hero-eyebrow" data-en="📊 Visualization Portal" data-zh="📊 可视化门户" data-nl="📊 Visualisatieportaal"
+      data-el="📊 Πύλη Οπτικοποίησης" data-pl="📊 Portal Wizualizacji">📊 Visualization Portal</div>
+    <h1 data-en="EMSE-Babel Dashboard" data-zh="EMSE-Babel 数据看板" data-nl="EMSE-Babel Dashboard"
+      data-el="EMSE-Babel Dashboard" data-pl="EMSE-Babel Dashboard">EMSE-<span>Babel</span> Dashboard</h1>
+    <div class="hero-sub" data-en="Multilingual Code Comment Evaluation Study" data-zh="多语言代码注释评测研究"
+      data-nl="Meertalige code-commentaar evaluatiestudie" data-el="Μελέτη αξιολόγησης πολυγλωσσικών σχολίων κώδικα"
+      data-pl="Badanie ewaluacji wielojęzycznych komentarzy do kodu">Multilingual Code Comment Evaluation Study</div>
+    <p data-en="Interactive visualizations for LLM-as-a-Judge analysis and neural metric benchmarking across 5 natural languages."
+      data-zh="跨 5 种自然语言的 LLM-as-a-Judge 分析与神经评价指标基准测试交互式可视化。"
+      data-nl="Interactieve visualisaties voor LLM-as-a-judge analyse en neurale metriek benchmarking over 5 natuurlijke talen."
+      data-el="Διαδραστικές οπτικοποιήσεις για ανάλυση LLM-as-a-judge και συγκριτική αξιολόγηση νευρωνικών μετρικών σε 5 φυσικές γλώσσες."
+      data-pl="Interaktywne wizualizacje do analizy LLM-as-a-judge i testów porównawczych metryk neuronowych w 5 językach naturalnych.">
+      Interactive visualizations for LLM-as-a-Judge analysis and neural metric benchmarking across 5 natural languages.
+    </p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">5</div>
+        <div class="stat-label" data-en="Languages" data-zh="语言" data-nl="Talen" data-el="Γλώσσες" data-pl="Języki">
+          Languages</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">9</div>
+        <div class="stat-label" data-en="Judge Models" data-zh="裁判模型" data-nl="Beoordelingsmodellen"
+          data-el="Μοντέλα κριτών" data-pl="Modele sędziowskie">Judge Models</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5</div>
+        <div class="stat-label" data-en="Target LLMs" data-zh="目标 LLM" data-nl="Doel LLM's" data-el="LLM-στόχοι"
+          data-pl="Docelowe LLM">Target LLMs</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4</div>
+        <div class="stat-label" data-en="Prompt Settings" data-zh="提示词设置" data-nl="Prompt-instellingen"
+          data-el="Ρυθμίσεις Prompt" data-pl="Ustawienia promptów">Prompt Settings</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">25</div>
+        <div class="stat-label" data-en="Error Codes" data-zh="错误代码" data-nl="Foutcodes" data-el="Κωδικοί σφάλματος"
+          data-pl="Kody błędów">Error Codes</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Quick access -->
+    <div class="quick-strip">
+      <a class="quick-btn qb-cyan" href="#judge-accuracy" data-en="⚖️ Accuracy (κ)" data-zh="⚖️ 准确率 (κ)"
+        data-nl="⚖️ Nauwkeurigheid (κ)" data-el="⚖️ Ακρίβεια (κ)" data-pl="⚖️ Dokładność (κ)">⚖️ Accuracy (κ)</a>
+      <a class="quick-btn qb-cyan" href="#judge-cm" data-en="🗂️ Confusion Matrices" data-zh="🗂️ 混淆矩阵"
+        data-nl="🗂️ Verwarringsmatrices" data-el="🗂️ Πίνακες σύγχυσης" data-pl="🗂️ Macierze błędów">🗂️ Confusion
+        Matrices</a>
+      <a class="quick-btn qb-pink" href="#judge-halluc" data-en="👻 Hallucinations" data-zh="👻 幻觉率"
+        data-nl="👻 Hallucinaties" data-el="👻 Ψευδαισθήσεις" data-pl="👻 Halucynacje">👻 Hallucinations</a>
+
+      <a class="quick-btn qb-teal" href="#judge-freq" data-en="📊 Error Frequency" data-zh="📊 错误频率"
+        data-nl="📊 Foutfrequentie" data-el="📊 Συχνότητα σφαλμάτων" data-pl="📊 Częstotliwość błędów">📊 Error
+        Frequency</a>
+      <a class="quick-btn qb-green" href="#neural-scoring" data-en="🧠 Neural Scoring" data-zh="🧠 神经评分"
+        data-nl="🧠 Neurale score" data-el="🧠 Νευρωνική βαθμολογία" data-pl="🧠 Punktacja neuronowa">🧠 Neural
+        Scoring</a>
+      <a class="quick-btn qb-green" href="#neural-align" data-en="🎯 Alignment" data-zh="🎯 专家对齐"
+        data-nl="🎯 Uitlijning" data-el="🎯 Ευθυγράμμιση" data-pl="🎯 Dopasowanie">🎯 Alignment</a>
+      <a class="quick-btn qb-green" href="#neural-noise" data-en="🔊 Noise Detection" data-zh="🔊 噪声检测"
+        data-nl="🔊 Ruisdetectie" data-el="🔊 Ανίχνευση θορύβου" data-pl="🔊 Wykrywanie szumu">🔊 Noise Detection</a>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <!--  SECTION 1 — LLM-as-a-Judge                                            -->
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="section-header" id="llm-judge">
+      <div class="section-icon icon-cyan">⚖️</div>
+      <div>
+        <div class="section-title" data-en="LLM-as-a-Judge" data-zh="LLM 裁判评测" data-nl="LLM-als-beoordelaar"
+          data-el="LLM-ως-κριτής" data-pl="LLM jako sędzia">LLM-as-a-Judge</div>
+        <div class="section-desc" data-en="Accuracy and hallucination rate of judge models vs. human expert labels"
+          data-zh="各模型作为裁判的准确率与幻觉率（对比专家标签）"
+          data-nl="Nauwkeurigheid en hallucinatiepercentage van beoordelingsmodellen versus menselijke expertlabels"
+          data-el="Ρυθμός ακρίβειας και ψευδαισθήσεων των μοντέλων κριτών έναντι των ετικετών ανθρώπινων εμπειρογνωμόνων"
+          data-pl="Dokładność i wskaźnik halucynacji modeli sędziowskich w porównaniu z etykietami ludzkich ekspertów">
+          Accuracy and hallucination rate of judge models vs. human expert labels</div>
+      </div>
+      <div class="section-divider"></div>
+    </div>
+
+    <!-- Accuracy κ -->
+    <div id="judge-accuracy" style="margin-bottom:14px">
+      <div class="card-grid">
+        <a class="card" href="llm_judge_accuracy_kappa.html" target="_blank">
+          <div class="card-accent-bar bar-cyan"></div>
+          <div class="card-body">
+            <div class="card-header-row">
+              <span class="card-icon">⚖️</span>
+              <span class="card-badge badge-plotly">Plotly</span>
+            </div>
+            <div class="card-title" data-en="Judge Accuracy — Weighted Cohen's κ" data-zh="裁判准确率 — 加权 Cohen's κ">Judge
+              Accuracy — Weighted Cohen's κ</div>
+            <div class="card-desc"
+              data-en="Scatter plot of quadratic weighted κ between each judge model and human expert labels, across all 5 languages and 4 prompt settings."
+              data-zh="各裁判模型与人类专家标签之间的二阶加权 κ 散点图，涵盖 5 种语言及 4 种提示词设置。">Scatter plot of quadratic weighted κ between each
+              judge model and human expert
+              labels, across all 5 languages and 4 prompt settings.</div>
+          </div>
+          <div class="card-meta">
+            <span class="tag">5 languages</span>
+            <span class="tag">9 judges</span>
+            <span class="tag">4 settings</span>
+            <span class="card-arrow">→</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Confusion Matrices grid -->
+    <div id="judge-cm" style="margin-bottom:14px;">
+      <div class="lang-group">
+        <div class="lang-group-header">
+          <span style="font-size:20px">🗂️</span>
+          <div>
+            <div class="lang-group-title" data-en="Confusion Matrices — Accuracy" data-zh="混淆矩阵 — 准确率分布">Confusion
+              Matrices — Accuracy</div>
+            <div class="lang-group-desc"
+              data-en="Row-normalised 3-class confusion matrices (Incorrect / Partial / Correct) by language and prompt setting"
+              data-zh="按语言和提示词设置划分的 3 类（错误/部分正确/正确）归一化混淆矩阵">Row-normalised 3-class confusion matrices (Incorrect /
+              Partial / Correct) by
+              language and prompt setting</div>
+          </div>
+          <span class="card-badge badge-plotly" style="margin-left:auto">Plotly</span>
+        </div>
+        <!-- English -->
+        <div
+          style="padding:14px 20px 4px; color:var(--text3); font-size:11px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase;">
+          🇬🇧 English</div>
+        <div class="cm-grid" style="padding:0 16px 12px;">
+          <a class="cm-card" href="llm_judge_accuracy_cm_en_cot.html" target="_blank"><span class="cm-lang">🇬🇧</span>
+            EN · CoT<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_en_hierarchical.html" target="_blank"><span
+              class="cm-lang">🇬🇧</span> EN · Hierarchical<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_en_rubric.html" target="_blank"><span
+              class="cm-lang">🇬🇧</span> EN · Rubric<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_en_standard.html" target="_blank"><span
+              class="cm-lang">🇬🇧</span> EN · Standard<span class="cm-arrow">→</span></a>
+        </div>
+        <!-- Chinese -->
+        <div
+          style="padding:4px 20px 4px; color:var(--text3); font-size:11px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; border-top:1px solid var(--border2);">
+          🇨🇳 Chinese</div>
+        <div class="cm-grid" style="padding:0 16px 12px;">
+          <a class="cm-card" href="llm_judge_accuracy_cm_zh_cot.html" target="_blank"><span class="cm-lang">🇨🇳</span>
+            ZH · CoT<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_zh_hierarchical.html" target="_blank"><span
+              class="cm-lang">🇨🇳</span> ZH · Hierarchical<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_zh_rubric.html" target="_blank"><span
+              class="cm-lang">🇨🇳</span> ZH · Rubric<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_zh_standard.html" target="_blank"><span
+              class="cm-lang">🇨🇳</span> ZH · Standard<span class="cm-arrow">→</span></a>
+        </div>
+        <!-- Dutch -->
+        <div
+          style="padding:4px 20px 4px; color:var(--text3); font-size:11px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; border-top:1px solid var(--border2);">
+          🇳🇱 Dutch</div>
+        <div class="cm-grid" style="padding:0 16px 12px;">
+          <a class="cm-card" href="llm_judge_accuracy_cm_nl_cot.html" target="_blank"><span class="cm-lang">🇳🇱</span>
+            NL · CoT<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_nl_hierarchical.html" target="_blank"><span
+              class="cm-lang">🇳🇱</span> NL · Hierarchical<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_nl_rubric.html" target="_blank"><span
+              class="cm-lang">🇳🇱</span> NL · Rubric<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_nl_standard.html" target="_blank"><span
+              class="cm-lang">🇳🇱</span> NL · Standard<span class="cm-arrow">→</span></a>
+        </div>
+        <!-- Greek -->
+        <div
+          style="padding:4px 20px 4px; color:var(--text3); font-size:11px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; border-top:1px solid var(--border2);">
+          🇬🇷 Greek</div>
+        <div class="cm-grid" style="padding:0 16px 12px;">
+          <a class="cm-card" href="llm_judge_accuracy_cm_el_cot.html" target="_blank"><span class="cm-lang">🇬🇷</span>
+            EL · CoT<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_el_hierarchical.html" target="_blank"><span
+              class="cm-lang">🇬🇷</span> EL · Hierarchical<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_el_rubric.html" target="_blank"><span
+              class="cm-lang">🇬🇷</span> EL · Rubric<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_el_standard.html" target="_blank"><span
+              class="cm-lang">🇬🇷</span> EL · Standard<span class="cm-arrow">→</span></a>
+        </div>
+        <!-- Polish -->
+        <div
+          style="padding:4px 20px 4px; color:var(--text3); font-size:11px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; border-top:1px solid var(--border2);">
+          🇵🇱 Polish</div>
+        <div class="cm-grid" style="padding:0 16px 12px;">
+          <a class="cm-card" href="llm_judge_accuracy_cm_pl_cot.html" target="_blank"><span class="cm-lang">🇵🇱</span>
+            PL · CoT<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_pl_hierarchical.html" target="_blank"><span
+              class="cm-lang">🇵🇱</span> PL · Hierarchical<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_pl_rubric.html" target="_blank"><span
+              class="cm-lang">🇵🇱</span> PL · Rubric<span class="cm-arrow">→</span></a>
+          <a class="cm-card" href="llm_judge_accuracy_cm_pl_standard.html" target="_blank"><span
+              class="cm-lang">🇵🇱</span> PL · Standard<span class="cm-arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hallucinations + Parse -->
+    <div class="card-grid" id="judge-halluc" style="margin-bottom:14px">
+
+      <a class="card" href="llm_judge_hallucinations.html" target="_blank">
+        <div class="card-accent-bar bar-cyan"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">👻</span><span
+              class="card-badge badge-plotly">Plotly</span></div>
+          <div class="card-title" data-en="Hallucination Rate" data-zh="幻觉率 (Hallucination Rate)">Hallucination Rate
+          </div>
+          <div class="card-desc"
+            data-en="Fraction of error codes produced by each judge absent from the official taxonomy — by language and prompt setting."
+            data-zh="统计裁判模型生成的非官方分类系统内的错误代码比例（按语言和提示词设置）。">Fraction of error codes produced by each judge absent from
+            the official taxonomy — by
+            language and prompt setting.</div>
+        </div>
+        <div class="card-meta">
+          <span class="tag">5 languages</span><span class="tag">9 judges</span><span class="tag">hallucination %</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" href="llm_judge_hallucinations_top_codes.html" target="_blank">
+        <div class="card-accent-bar bar-cyan"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">🔍</span><span
+              class="card-badge badge-plotly">Plotly</span></div>
+          <div class="card-title">Top Hallucinated Error Codes</div>
+          <div class="card-desc">Bar chart of the 20 most frequently produced out-of-vocabulary error codes across all
+            languages, settings, and judges.</div>
+        </div>
+        <div class="card-meta">
+          <span class="tag">global</span><span class="tag">top-20</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+
+      <a class="card" href="llm_judge_frequency.html" target="_blank" id="judge-freq">
+        <div class="card-accent-bar bar-turq"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">📊</span><span
+              class="card-badge badge-bokeh">Bokeh</span></div>
+          <div class="card-title">Error Frequency Dashboard</div>
+          <div class="card-desc">Multi-tab Bokeh dashboard: LG-GR4 frequency per target LLM, accuracy distribution
+            (human vs. judges), and error-code heatmaps by model.</div>
+        </div>
+        <div class="card-meta">
+          <span class="tag">LG-GR4</span><span class="tag">error heatmap</span><span class="tag">Polish</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <!--  SECTION 2 — Neural Metrics                                             -->
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="section-header" id="neural">
+      <div class="section-icon icon-green">🧠</div>
+      <div>
+        <div class="section-title" data-en="Neural Metrics" data-zh="神经评价指标" data-nl="Neurale metrieken"
+          data-el="Νευρωνικές μετρικές" data-pl="Metryki neuronowe">Neural Metrics</div>
+        <div class="section-desc"
+          data-en="BARTScore & BERTScore — distributions, human alignment, and noise-detection performance"
+          data-zh="BARTScore 与 BERTScore — 分布情况、专家对齐度及噪声检测表现"
+          data-nl="BARTScore & BERTScore — distributies, menselijke uitlijning en ruisdetectieprestaties"
+          data-el="BARTScore & BERTScore — κατανομές, ευθυγράμμιση με τον άνθρωπο και απόδοση ανίχνευσης θορύβου"
+          data-pl="BARTScore i BERTScore — rozkłady, dopasowanie do człowieka i wydajność wykrywania szumu">BARTScore &
+          BERTScore — distributions, human alignment, and noise-detection
+          performance</div>
+      </div>
+      <div class="section-divider"></div>
+    </div>
+
+    <!-- Mean Scoring -->
+    <div class="card-grid" id="neural-scoring" style="margin-bottom:16px;">
+      <a class="card" href="neural_metrics_scoring_bertscore_polish.html" target="_blank">
+        <div class="card-accent-bar bar-green"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">📈</span><span
+              class="card-badge badge-plotly">Plotly</span></div>
+          <div class="card-title" data-en="Mean Score by Scoring Model & Context" data-zh="平均得分分布 (按模型与上下文)">Mean Score
+            by Scoring Model & Context</div>
+          <div class="card-desc"
+            data-en="Log-scale dot-plot of mean BERTScore F per scoring model and context level (none / minimal / full), averaged over 5 target LLMs."
+            data-zh="各评分模型在不同上下文级别下的 BERTScore F 平均分对数点图。">Log-scale dot-plot of mean BERTScore F per scoring model and
+            context level (none /
+            minimal / full), averaged over 5 target LLMs.</div>
+        </div>
+        <div class="card-meta">
+          <span class="tag">BERTScore F</span><span class="tag">Polish</span><span class="tag">log scale</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Alignment -->
+    <div id="neural-align">
+      <div class="lang-group">
+        <div class="lang-group-header">
+          <span style="font-size:20px">🎯</span>
+          <div>
+            <div class="lang-group-title" data-en="Human Alignment — Macro F1 & Weighted κ"
+              data-zh="人类专家对齐度 — Macro F1 与 加权 κ" data-nl="Menselijke uitlijning — Macro F1 & Gewogen κ"
+              data-el="Ευθυγράμμιση με τον άνθρωπο — Macro F1 & Σταθμισμένο κ"
+              data-pl="Dopasowanie do człowieka — Macro F1 i ważone κ">Human Alignment — Macro F1 & Weighted κ</div>
+            <div class="lang-group-desc"
+              data-en="How well does each scoring model correlate with human expert accuracy labels?"
+              data-zh="衡量各评分模型与人类专家选择的准确率标签之间的相关程度。"
+              data-nl="Hoe goed correleert elk scoremodel met de nauwkeurigheidslabels van menselijke experts?"
+              data-el="Πόσο καλά συσχετίζεται κάθε μοντέλο βαθμολόγησης με τις ετικέτες ακρίβειας ανθρώπινων εμπειρογνωμόνων;"
+              data-pl="Jak dobrze każdy model punktacji koreluje z etykietami dokładności ludzkich ekspertów?">How well
+              does each scoring model correlate with human expert accuracy labels?
+            </div>
+          </div>
+          <span class="card-badge badge-plotly" style="margin-left:auto">Plotly</span>
+        </div>
+        <div class="lang-grid">
+          <a class="lang-item" href="neural_metrics_alignment_f1_bartscore_chinese.html" target="_blank">
+            <span class="lang-flag">🇨🇳</span>
+            <span class="lang-name">Chinese</span>
+            <span class="lang-sub">Macro F1</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_alignment_f1_bartscore_english.html" target="_blank">
+            <span class="lang-flag">🇬🇧</span>
+            <span class="lang-name">English</span>
+            <span class="lang-sub">Macro F1</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_alignment_f1_bartscore_greek.html" target="_blank">
+            <span class="lang-flag">🇬🇷</span>
+            <span class="lang-name">Greek</span>
+            <span class="lang-sub">Macro F1</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_alignment_f1_bartscore_dutch.html" target="_blank">
+            <span class="lang-flag">🇳🇱</span>
+            <span class="lang-name">Dutch</span>
+            <span class="lang-sub">Macro F1</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_alignment_f1_bartscore_polish.html" target="_blank">
+            <span class="lang-flag">🇵🇱</span>
+            <span class="lang-name">Polish</span>
+            <span class="lang-sub">Macro F1</span>
+          </a>
+        </div>
+        <div class="lang-sub-links">
+          <span class="lang-sub-label">κ views:</span>
+          <a class="lang-link" href="neural_metrics_alignment_kappa_bartscore_chinese.html" target="_blank">Chinese
+            κ</a>
+          <a class="lang-link" href="neural_metrics_alignment_kappa_bartscore_english.html" target="_blank">English
+            κ</a>
+          <a class="lang-link" href="neural_metrics_alignment_kappa_bartscore_greek.html" target="_blank">Greek κ</a>
+          <a class="lang-link" href="neural_metrics_alignment_kappa_bartscore_dutch.html" target="_blank">Dutch κ</a>
+          <a class="lang-link" href="neural_metrics_alignment_kappa_bartscore_polish.html" target="_blank">Polish κ</a>
+        </div>
+        <div class="lang-sub-links" style="border-top:1px solid var(--border2);">
+          <span class="lang-sub-label">Confusion matrices:</span>
+          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_chinese.html" target="_blank">Chinese CM</a>
+          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_english.html" target="_blank">English CM</a>
+          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_greek.html" target="_blank">Greek CM</a>
+          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_dutch.html" target="_blank">Dutch CM</a>
+          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_polish.html" target="_blank">Polish CM</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Noise Detection -->
+    <div id="neural-noise" style="margin-top:0;">
+      <div class="lang-group">
+        <div class="lang-group-header">
+          <span style="font-size:20px">🔊</span>
+          <div>
+            <div class="lang-group-title">Noise Detection — KDE Binary Classifier (Macro F1)</div>
+            <div class="lang-group-desc">Can scoring models distinguish real comments from uniformly / targeted-noisy
+              ones?</div>
+          </div>
+          <span class="card-badge badge-plotly" style="margin-left:auto">Plotly</span>
+        </div>
+        <div class="lang-grid">
+          <a class="lang-item" href="neural_metrics_noise_bertscore_chinese.html" target="_blank">
+            <span class="lang-flag">🇨🇳</span>
+            <span class="lang-name">Chinese</span>
+            <span class="lang-sub">Noise F1</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_noise_bertscore_english.html" target="_blank">
+            <span class="lang-flag">🇬🇧</span>
+            <span class="lang-name">English</span>
+            <span class="lang-sub">Noise F1</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_noise_bertscore_greek.html" target="_blank">
+            <span class="lang-flag">🇬🇷</span>
+            <span class="lang-name">Greek</span>
+            <span class="lang-sub">Noise F1</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_noise_bertscore_dutch.html" target="_blank">
+            <span class="lang-flag">🇳🇱</span>
+            <span class="lang-name">Dutch</span>
+            <span class="lang-sub">Noise F1</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_noise_bertscore_polish.html" target="_blank">
+            <span class="lang-flag">🇵🇱</span>
+            <span class="lang-name">Polish</span>
+            <span class="lang-sub">Noise F1</span>
+          </a>
+        </div>
+        <div class="lang-sub-links">
+          <span class="lang-sub-label">Confusion matrices:</span>
+          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_chinese.html" target="_blank">Chinese CM</a>
+          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_english.html" target="_blank">English CM</a>
+          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_greek.html" target="_blank">Greek CM</a>
+          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_dutch.html" target="_blank">Dutch CM</a>
+          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_polish.html" target="_blank">Polish CM</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <!--  SECTION 3 — Legacy                                                     -->
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="section-header" id="legacy">
+      <div class="section-icon icon-purple">🗄️</div>
+      <div>
+        <div class="section-title" data-en="Legacy Visualizations" data-zh="遗留可视化视图" data-nl="Legacy visualisaties"
+          data-el="Προηγούμενες οπτικοποιήσεις" data-pl="Poprzednie wizualizacje">Legacy Visualizations</div>
+        <div class="section-desc" data-en="Previous exploratory plots — kept for reference" data-zh="早期的探索性图表 — 仅供参考"
+          data-nl="Eerdere verkennende grafieken — bewaard ter referentie"
+          data-el="Προηγούμενα διερευνητικά διαγράμματα — διατηρούνται για αναφορά"
+          data-pl="Poprzednie wykresy eksploracyjne — zachowane w celach informacyjnych">Previous exploratory plots —
+          kept for reference</div>
+      </div>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="card-grid">
+
+      <a class="card" href="dashboard.html" target="_blank">
+        <div class="card-accent-bar bar-purple"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">📋</span><span
+              class="card-badge badge-bokeh">Bokeh</span></div>
+          <div class="card-title">Legacy Dashboard</div>
+          <div class="card-desc">Original combined Bokeh dashboard.</div>
+        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
+      </a>
+
+      <a class="card" href="plotly_1_accuracy_stacked.html" target="_blank">
+        <div class="card-accent-bar bar-purple"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">📊</span><span
+              class="card-badge badge-plotly">Plotly</span></div>
+          <div class="card-title">Accuracy — Stacked Bar</div>
+          <div class="card-desc">Stacked bar chart of accuracy distributions.</div>
+        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
+      </a>
+
+      <a class="card" href="plotly_2_correctrate_heatmap.html" target="_blank">
+        <div class="card-accent-bar bar-purple"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">🟩</span><span
+              class="card-badge badge-plotly">Plotly</span></div>
+          <div class="card-title">Correct Rate — Heatmap</div>
+          <div class="card-desc">Heatmap of correct rate across models and languages.</div>
+        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
+      </a>
+
+      <a class="card" href="plotly_3_radar_chart.html" target="_blank">
+        <div class="card-accent-bar bar-purple"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">🕸️</span><span
+              class="card-badge badge-plotly">Plotly</span></div>
+          <div class="card-title">Radar Chart</div>
+          <div class="card-desc">Spider chart comparing LLM performance profiles.</div>
+        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
+      </a>
+
+      <a class="card" href="plotly_4_error_treemap.html" target="_blank">
+        <div class="card-accent-bar bar-purple"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">🌳</span><span
+              class="card-badge badge-plotly">Plotly</span></div>
+          <div class="card-title">Error Taxonomy — Treemap</div>
+          <div class="card-desc">Hierarchical treemap of error code frequencies.</div>
+        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
+      </a>
+
+      <a class="card" href="plotly_5_bartscore_violin.html" target="_blank">
+        <div class="card-accent-bar bar-purple"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">🎻</span><span
+              class="card-badge badge-plotly">Plotly</span></div>
+          <div class="card-title">BARTScore — Violin</div>
+          <div class="card-desc">Violin plot of BARTScore distributions per model.</div>
+        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
+      </a>
+
+      <a class="card" href="plotly_6_sunburst.html" target="_blank">
+        <div class="card-accent-bar bar-purple"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">☀️</span><span
+              class="card-badge badge-plotly">Plotly</span></div>
+          <div class="card-title">Error Sunburst</div>
+          <div class="card-desc">Sunburst chart of error category-code hierarchy.</div>
+        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
+      </a>
+
+      <a class="card" href="plotly_7_bartscore_lines.html" target="_blank">
+        <div class="card-accent-bar bar-purple"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">📉</span><span
+              class="card-badge badge-plotly">Plotly</span></div>
+          <div class="card-title">BARTScore — Line Trends</div>
+          <div class="card-desc">Line chart of BARTScore trends across conditions.</div>
+        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
+      </a>
+
+      <a class="card" href="bokeh_A_correct_rates.html" target="_blank">
+        <div class="card-accent-bar bar-purple"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">✅</span><span class="card-badge badge-bokeh">Bokeh</span>
+          </div>
+          <div class="card-title">Correct Rates (Bokeh)</div>
+          <div class="card-desc">Original Bokeh correct rate chart.</div>
+        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
+      </a>
+
+      <a class="card" href="bokeh_B_top_errors.html" target="_blank">
+        <div class="card-accent-bar bar-purple"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">❌</span><span class="card-badge badge-bokeh">Bokeh</span>
+          </div>
+          <div class="card-title">Top Errors (Bokeh)</div>
+          <div class="card-desc">Original Bokeh top error-codes chart.</div>
+        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
+      </a>
+
+      <a class="card" href="bokeh_C_bartscore_heatmap.html" target="_blank">
+        <div class="card-accent-bar bar-purple"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">🟨</span><span
+              class="card-badge badge-bokeh">Bokeh</span></div>
+          <div class="card-title">BARTScore Heatmap (Bokeh)</div>
+          <div class="card-desc">Original Bokeh BARTScore heatmap.</div>
+        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
+      </a>
+
+      <a class="card" href="bokeh_D_error_categories.html" target="_blank">
+        <div class="card-accent-bar bar-purple"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">🗂️</span><span
+              class="card-badge badge-bokeh">Bokeh</span></div>
+          <div class="card-title">Error Categories (Bokeh)</div>
+          <div class="card-desc">Original Bokeh error category breakdown.</div>
+        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
+      </a>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-tudelft" style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+      <a href="https://se.ewi.tudelft.nl/research-lines/aise-ml4se/" target="_blank"
+        style="color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 6px;">
+        🏛️ TU Delft — AISE lab
+      </a>
+      <div style="font-size: 11px; color: var(--text3); max-width: 800px; line-height: 1.5;">
+        Jonathan Katzy, Yongcheng Huang, Gopal-Raj Panchu, Maksym Ziemlewski,
+        Paris Loizides, Sander Vermeulen, Arie van Deursen, Maliheh Izadi
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const langSelect = document.getElementById('lang-select');
+
+    function setLanguage(lang) {
+      if (!langSelect) return;
+      document.querySelectorAll('[data-en]').forEach(el => {
+        const text = el.getAttribute(`data-${lang}`);
+        if (text) el.textContent = text;
+      });
+      langSelect.value = lang;
+      localStorage.setItem('emse-babel-lang', lang);
+    }
+
+    if (langSelect) {
+      langSelect.addEventListener('change', (e) => {
+        setLanguage(e.target.value);
+      });
+    }
+
+    const storedLang = localStorage.getItem('emse-babel-lang');
+    const supported = ['en', 'zh', 'nl', 'el', 'pl'];
+
+    let initial = 'en'; // Force English as starting language
+    if (storedLang && supported.includes(storedLang)) {
+      initial = storedLang;
+    }
+
+    setLanguage(initial);
+  </script>
+</body>
+
+</html>

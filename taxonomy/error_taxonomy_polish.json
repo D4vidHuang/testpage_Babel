@@ -1,0 +1,306 @@
+{
+  "": [
+    {
+      "id": "E",
+      "nazwa": "Wykluczony",
+      "opis": "",
+      "kryteria_wlaczenia": "1) Za mało kontekstu (krótki plik)\n2) Treść wygenerowana automatycznie\n3) Oryginalny komentarz jest w niewłaściwym języku\n4) Zakomentowany kod",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "M",
+      "nazwa": "Różne",
+      "opis": "",
+      "kryteria_wlaczenia": "Wszystko, co nie pasuje do żadnej z powyższych kategorii",
+      "kryteria_wylaczenia": ""
+    }
+  ],
+  "Fragment kodu": [
+    {
+      "id": "SE-CS1",
+      "nazwa": "Zakomentowany kod",
+      "opis": "",
+      "kryteria_wlaczenia": "Kod znajdujący się w bloku kodu",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "SE-CS2",
+      "nazwa": "Kod przeznaczony do uruchomienia",
+      "opis": "",
+      "kryteria_wlaczenia": "Kod, który model zamierza uruchomić",
+      "kryteria_wylaczenia": ""
+    }
+  ],
+  "Gramatyka": [
+    {
+      "id": "LG-GR1",
+      "nazwa": "Liczba mnoga/pojedyncza",
+      "opis": "",
+      "kryteria_wlaczenia": "nieprawidłowe stosowanie zasad liczby mnogiej\n(podmiot i orzeczenie w zdaniu nie zgadzają się pod względem liczby. Na przykład zdanie \"Książka są na stole\" powinno brzmieć \"Książka jest na stole\".)",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "LG-GR2",
+      "nazwa": "Koniugacja",
+      "opis": "",
+      "kryteria_wlaczenia": "Nieprawidłowe użycie reguł koniugacji",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "LG-GR3",
+      "nazwa": "Rodzaj gramatyczny",
+      "opis": "",
+      "kryteria_wlaczenia": "Nieprawidłowy rodzaj gramatyczny w przypadku języków z rodzajami rzeczowników",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "LG-GR4",
+      "nazwa": "Ortografia",
+      "opis": "",
+      "kryteria_wlaczenia": "Nieprawidłowa pisownia",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "LG-GR5",
+      "nazwa": "Wielkie litery",
+      "opis": "",
+      "kryteria_wlaczenia": "Predykcja używa wielkich liter w sposób gramatycznie niepoprawny: np. wszystkie wielkie, każde słowo zaczyna się wielką literą",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "LG-GR6",
+      "nazwa": "Spójność",
+      "opis": "",
+      "kryteria_wlaczenia": "1) Błąd w używaniu języka polegający na organizowaniu słów i fraz, które nie mają sensu (niespójność).\n2) Brak (lub niewłaściwe użycie) przecinka lub cudzysłowu\n3) Brak spójności lokalnej, czyli logicznej i gramatycznej spójności kolejnych, sąsiadujących ze sobą zdań w akapitach. Istotnymi zaburzeniami spójności wypowiedzi są na przykład akapity zbudowane z ciągu zdań, które nie są ze sobą logicznie ani gramatycznie powiązane (strumień luźnych myśli, skojarzeń).\n\n4) Błędy składniowe w piśmie odnoszą się do błędów w układzie słów i fraz w zdaniu, które naruszają zasady gramatyki i struktury zdania.\n- Zdania ciągłe: Występują, gdy dwa lub więcej niezależnych zdań jest połączonych bez odpowiednich znaków interpunkcyjnych lub spójników.\n- Błędnie umieszczone modyfikatory: Ten błąd występuje, gdy słowo lub fraza jest umieszczona zbyt daleko od słowa, które ma modyfikować, co prowadzi do nieporozumień lub dwuznaczności. Na przykład: „Pędząc szybko, autobus został przegapiony”. Sugeruje to, że autobus jechał szybko, a nie osoba, którą miał modyfikować.\n- Podwójne przeczenia: Użycie dwóch słów przeczących w zdaniu może wprowadzać zamieszanie lub dwuznaczność.\n\n- Brak struktury równoległej: Dzieje się tak, gdy lista elementów w zdaniu nie jest przedstawiona w sposób równoległy.",
+      "kryteria_wylaczenia": ""
+    }
+  ],
+  "Halucynacja": [
+    {
+      "id": "SE-HA1",
+      "nazwa": "Błędne fakty",
+      "opis": "",
+      "kryteria_wlaczenia": "W treści występują losowo wstawione fakty (takie jak imiona, daty czy wydarzenia), które nie są zgodne z kontekstem ani oczekiwaną treścią. Na przykład, odwoływanie się do wydarzenia, które nie miało miejsca, lub wspominanie niewłaściwej/fikcyjnej osoby.",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "SE-HA2",
+      "nazwa": "Rozbieżność kontekstowa",
+      "opis": "",
+      "kryteria_wlaczenia": "Halucynacja nieosadzona w dostarczonym kontekście",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "SE-HA3",
+      "nazwa": "Domysł",
+      "opis": "",
+      "kryteria_wlaczenia": "1) Poprawne składniowo, ale semantycznie lub faktycznie niepoprawne\n2) Osadzone w dostarczonym kontekście",
+      "kryteria_wylaczenia": ""
+    }
+  ],
+  "Nieprawidłowy format komentarza": [
+    {
+      "id": "ST-IF1",
+      "nazwa": "Niespójność stylu",
+      "opis": "",
+      "kryteria_wlaczenia": "1) Model używa przestarzałego formatu Javadoc\n2) Model używa formatu komentarza niezgodnego ze standardami\n3) Model powtarza format przypominający automatycznie generowany komentarz, który nie dostarcza wystarczającej ilości informacji, zamiast generować rzeczywisty opis\n4) Model nie jest zgodny z formatem Javadoc obecnym w pozostałej części pliku (jeśli obecny format jest poprawny)",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "ST-IF2",
+      "nazwa": "Pominięty identyfikator",
+      "opis": "",
+      "kryteria_wlaczenia": "1) Model zaczyna wymieniać @params, ale pomija niektóre z nich\n2) Generacja zaczyna się od tagu @return, ale potem nie ma @params\n3) Wygenerowano @params, ale brak @return dla metody, która nie zwraca void",
+      "kryteria_wylaczenia": ""
+    }
+  ],
+  "Językowe": [
+    {
+      "id": "LG",
+      "nazwa": "Błąd językowy",
+      "opis": "",
+      "kryteria_wlaczenia": "Błędy językowe to wszystkie błędy związane z treścią językową wygenerowanego tekstu",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "LG-GR",
+      "nazwa": "Gramatyka",
+      "opis": "",
+      "kryteria_wlaczenia": "Język jest poprawny, popełniono błąd gramatyczny",
+      "kryteria_wylaczenia": "Wyklucz błędy związane z wyborami stylistycznymi, a nie poprawnością gramatyczną (np. preferencje co do strony biernej i czynnej, chyba że są ewidentnie niepoprawne lub nieodpowiednie)."
+    },
+    {
+      "id": "LG-IS",
+      "nazwa": "Użycie niepoprawnego synonimu",
+      "opis": "",
+      "kryteria_wlaczenia": "Użycie podobnego słowa o niepoprawnym znaczeniu w kontekście (np. dom->mieszkanie)",
+      "kryteria_wylaczenia": "Wyklucz synonimy, które są kontekstowo odpowiednie, nawet jeśli nie są najbardziej precyzyjnym terminem"
+    },
+    {
+      "id": "LG-WL",
+      "nazwa": "Zły język",
+      "opis": "",
+      "kryteria_wlaczenia": "Model przewiduje komentarz (lub jego znaczącą część) w języku innym niż docelowy (Polski)",
+      "kryteria_wylaczenia": ""
+    }
+  ],
+  "Zapamiętywanie": [
+    {
+      "id": "MS-ME1",
+      "nazwa": "Zawiera dane osobowe",
+      "opis": "Dane osobowe (PII) to informacje, które samodzielnie lub wraz z innymi danymi mogą zidentyfikować osobę",
+      "kryteria_wlaczenia": "Dane osobowe są zawarte w wygenerowanym komentarzu (fikcyjne lub niewystępujące w oryginalnym poleceniu)",
+      "kryteria_wylaczenia": "Wyklucz informacje niespecyficzne, których nie można wykorzystać do identyfikacji danej osoby (np. ogólne stanowiska pracy, ogólne imiona w danym języku)."
+    },
+    {
+      "id": "MS-ME2",
+      "nazwa": "Zawiera URL",
+      "opis": "",
+      "kryteria_wlaczenia": "URL do pliku lub repozytorium jest zawarty",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "MS-ME3",
+      "nazwa": "Dosłowne zapamiętanie",
+      "opis": "",
+      "kryteria_wlaczenia": "1) Model zapamiętał treść dosłownie\n2) Tekst nie zostałby wygenerowany, gdyby nie zapamiętanie",
+      "kryteria_wylaczenia": ""
+    }
+  ],
+  "Specyficzne dla modelu": [
+    {
+      "id": "MS",
+      "nazwa": "Specyficzne dla modelu",
+      "opis": "",
+      "kryteria_wlaczenia": "Błędy specyficzne dla modelu to wszystkie błędy związane z działaniem LLM",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "MS-IG",
+      "nazwa": "Niespójna generacja",
+      "opis": "",
+      "kryteria_wlaczenia": "Model generuje losowe słowa bez logicznego związku między nimi",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "MS-CC",
+      "nazwa": "Kopiowanie kontekstu",
+      "opis": "",
+      "kryteria_wlaczenia": "Model kopiuje otaczający kontekst dosłownie",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "MS-ME",
+      "nazwa": "Zapamiętywanie",
+      "opis": "",
+      "kryteria_wlaczenia": "Model rozpoznał kod w pewnym stopniu",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "MS-ET",
+      "nazwa": "Przedwczesne zakończenie",
+      "opis": "",
+      "kryteria_wlaczenia": "Model przestaje generować w środku predykcji, podczas gdy komentarz wyraźnie nie jest kompletny lub nie wygenerował niczego",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "MS-LT",
+      "nazwa": "Spóźnione zakończenie",
+      "opis": "",
+      "kryteria_wlaczenia": "Komentarz kontynuuje produkcję treści, mimo że powinien był zakończyć się wcześniej. np.\n1. Gdy zawiera niepotrzebne puste tagi (@version)\n2. Kontynuuje dodawanie komentarzy liniowych, mimo że jest to niepotrzebne",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "MS-RE",
+      "nazwa": "Powtórzenie",
+      "opis": "",
+      "kryteria_wlaczenia": "Model generuje i powtarza to, co już powiedział w pewnym stopniu",
+      "kryteria_wylaczenia": ""
+    }
+  ],
+  "Powtórzenie": [
+    {
+      "id": "MS-RE1",
+      "nazwa": "Powtórzenie wzorca",
+      "opis": "",
+      "kryteria_wlaczenia": "Model wygenerował powtarzający się wzorzec: np. 1,2,3,4,5,6,",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "MS-RE2",
+      "nazwa": "Dosłowne powtórzenie",
+      "opis": "",
+      "kryteria_wlaczenia": "Model wygenerował dosłowne powtórzenie: np. powtarzam się powtarzam się powtarzam się",
+      "kryteria_wylaczenia": ""
+    }
+  ],
+  "Semantyczne": [
+    {
+      "id": "SE",
+      "nazwa": "Błąd semantyczny",
+      "opis": "",
+      "kryteria_wlaczenia": "Błędy semantyczne to wszystkie błędy związane z semantyką lub znaczeniem wygenerowanej treści",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "SE-MD",
+      "nazwa": "Brakujące szczegóły",
+      "opis": "",
+      "kryteria_wlaczenia": "1) Opis nie opisuje w pełni treści podsumowanego kodu\n2) Bieżące informacje nie opisują pełnej funkcjonalności podsumowanego kodu\n3) Bieżące informacje nie opisują całego celu podsumowanego kodu\n4) Wygenerowany komentarz jest zbyt ogólny",
+      "kryteria_wylaczenia": "1) Wyklucz podsumowania na ogólnym poziomie zgodne z oczekiwanym formatem odpowiedzi\n2) Wyklucz komentarze ogólne, ale zapewniające wystarczające zrozumienie funkcjonalności kodu, szczególnie w prostych lub trywialnych częściach kodu"
+    },
+    {
+      "id": "SE-TS",
+      "nazwa": "Zbyt szczegółowy",
+      "opis": "",
+      "kryteria_wlaczenia": "Wygenerowany komentarz jest zbyt szczegółowy. Zawiera szczegółowe podsumowanie każdej linii, co przeczy celowi dokumentacji i podsumowania",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "SE-HA",
+      "nazwa": "Halucynacja",
+      "opis": "",
+      "kryteria_wlaczenia": "Kategoria dla generacji halucynacyjnych, tj. faktycznie niepoprawnych lub niezwiązanych z poleceniem wejściowym",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "SE-CS",
+      "nazwa": "Włączenie fragmentu kodu",
+      "opis": "",
+      "kryteria_wlaczenia": "Model generuje rzeczywisty kod poza komentarzem",
+      "kryteria_wylaczenia": "1) Wyklucz komentarze zawierające minimalne fragmenty kodu dla jasności lub celów przykładowych\n2) Wyklucz krótkie wygenerowane fragmenty kodu stworzone do uzupełnienia, które dobrze pasują do programu"
+    }
+  ],
+  "Składnia": [
+    {
+      "id": "ST",
+      "nazwa": "Składnia",
+      "opis": "",
+      "kryteria_wlaczenia": "Błędy składniowe to wszystkie błędy związane ze składnią komentarzy",
+      "kryteria_wylaczenia": ""
+    },
+    {
+      "id": "ST-IF",
+      "nazwa": "Nieprawidłowy format komentarza",
+      "opis": "",
+      "kryteria_wlaczenia": "1) Model używa przestarzałego formatu javadoc\n2) Model używa formatu komentarza niespójnego ze standardami\n3) Błędy z formatem javadoc",
+      "kryteria_wylaczenia": ""
+    }
+  ],
+  "Zły język": [
+    {
+      "id": "LG-WL1",
+      "nazwa": "Niepożądane tłumaczenia",
+      "opis": "",
+      "kryteria_wlaczenia": "Tłumaczenia poprawne, ale niepożądane w języku, ponieważ słowa są rzadko używane w tym kontekście",
+      "kryteria_wylaczenia": "Wyklucz poprawne użycie pojedyńczych słów w obcym języku, które są powszechnie zintegrowane z używanym językiem"
+    },
+    {
+      "id": "LG-WL2",
+      "nazwa": "Nieprawidłowy język",
+      "opis": "",
+      "kryteria_wlaczenia": "Model przewiduje komentarz (lub jego znaczącą część) w języku innym niż docelowy",
+      "kryteria_wylaczenia": ""
+    }
+  ]
+}

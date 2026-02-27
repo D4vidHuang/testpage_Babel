@@ -1,0 +1,162 @@
+================================================================================
+WORKFLOW PROMPT SIMULATION
+================================================================================
+Workflow Type: hierarchical
+Language: Dutch
+Generated: 2026-02-05 09:23:50
+================================================================================
+
+Loaded prompt module: core.prompting.prompt_dutch
+
+--------------------------------------------------------------------------------
+WORKFLOW CONFIGURATION
+--------------------------------------------------------------------------------
+Name: Hierarchical Evaluation
+Description: Category-clustered evaluation (Workflow 6)
+System Prompt: basic
+Output Format: basic
+Uses Clusters: Yes
+
+NOTE: Showing cluster 'linguistic_grammar' as example (hierarchical workflows process multiple clusters)
+
+================================================================================
+INSTANCE 1: 11641_4
+================================================================================
+
+[METADATA]
+  Language: Dutch
+  File ID:  11641_4
+
+[ORIGINAL COMMENT]
+  // het slidenummer van de huidige Slide_x000D_
+
+[MODEL PREDICTIONS]
+  - Qwen/CodeQwen1.5-7B:
+     nummer van de huidige slide_x000D_
+  - bigcode/starcoder2-7b:
+    e dat getoond wordt_x000D_
+  - google/codegemma-7b:
+    ummer van de huidige slide_x000D_
+  - ibm-granite/granite-8b-code-base:
+    enummer van de huidige slide_x000D_
+_x000D_
+  - meta-llama/CodeLlama-7b-hf:
+    ummer van de huidige Slide_x000D_
+
+################################################################################
+# COMPLETE PROMPT SENT TO JUDGE MODEL
+################################################################################
+
+================================================================================
+[1] SYSTEM MESSAGE
+================================================================================
+U bent een deskundige evaluator. U analyseert Java-code, commentaren, en documentatie op correctheid op basis van een gegeven taxonomie van fouten.\n\nInstructies voor Biasmitigatie:\n- Vermijd Verbosity Bias: Geef geen voorkeur aan langere commentaren. Evalueer op basis van correctheid.\n- Zorg voor Consistentie: Pas dezelfde normen toe op alle voorspellingen.\n- Voorkom Systematische Bias: Evalueer elk geval onafhankelijk op basis van de taxonomie.
+
+================================================================================
+[2] USER MESSAGE
+================================================================================
+U evalueert code commentaren alleen voor LINGUISTIC_GRAMMAR.\n\nRelevante foutcategorieën voor deze evaluatie:\n{
+  "Grammatica": [
+    {
+      "id": "LG-GR1",
+      "naam": "Meervoud",
+      "beschrijving": "",
+      "inclusiecriteria": "Onjuist gebruik van meervoudsregels (het onderwerp en werkwoord in een zin komen niet overeen in getal)",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR2",
+      "naam": "Vervoeging",
+      "beschrijving": "",
+      "inclusiecriteria": "Onjuist gebruik van vervoegingsregels",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR3",
+      "naam": "Geslacht",
+      "beschrijving": "",
+      "inclusiecriteria": "Onjuist geslacht in het geval de taal geslachten voor zelfstandige naamwoorden heeft",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR4",
+      "naam": "Spelling",
+      "beschrijving": "",
+      "inclusiecriteria": "Onjuiste spelling",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR5",
+      "naam": "Hoofdlettergebruik",
+      "beschrijving": "",
+      "inclusiecriteria": "Voorspelling gebruikt hoofdletters op een grammaticaal onjuiste manier: bijv. allemaal hoofdletters, elk woord begint met een hoofdletter",
+      "exclusiecriteria": ""
+    },
+    {
+      "id": "LG-GR6",
+      "naam": "Samenhang",
+      "beschrijving": "",
+      "inclusiecriteria": "1) Fout in het gebruik van taal die het organiseren van woorden en zinsdelen omvat die geen zin hebben (incoherentie).\n2) Ontbrekende (of ongepast gebruik van) een komma of aanhalingsteken\n3) Gebrek aan lokale samenhang - logische en grammaticale consistentie tussen opeenvolgende zinnen\n4) Syntaxfouten - onjuiste rangschikking van woorden en zinsdelen in een zin",
+      "exclusiecriteria": ""
+    }
+  ],
+  "Taalkundig": [
+    {
+      "id": "LG-IS",
+      "naam": "Gebruik van onjuist synoniem",
+      "beschrijving": "",
+      "inclusiecriteria": "Gebruik van een vergelijkbaar woord met een onjuiste betekenis in context (bijv. huis->woning)",
+      "exclusiecriteria": "Sluit synoniemen uit die contextueel gepast zijn, zelfs als ze niet de meest precieze term zijn"
+    }
+  ]
+}\n\nBELANGRIJK: Focus ALLEEN op de hierboven vermelde fouttypen. Negeer andere potentiële problemen—deze worden apart geëvalueerd.\n\nBepaal voor elke foutcategorie hierboven of de fout aanwezig is op basis van de inclusiecriteria. Controleer altijd exclusiecriteria voordat u bevestigt.
+
+Retourneer gestructureerde JSON met resultaten voor elk model:
+{
+  "evaluaties": [
+    {
+      "model_naam": "<model_identificator>",
+      "fouten": ["<fout_id>", ...],
+      "uitleg": "Korte uitleg van gevonden fouten.",
+      "algehele_kwaliteit": "<correct|gedeeltelijk_correct|incorrect>"
+    }
+  ]
+}
+
+Kwaliteitslabels:
+- correct: Het commentaar is nauwkeurig, compleet en foutloos.
+- gedeeltelijk_correct: Het commentaar is grotendeels correct maar heeft een kleine fout.
+- incorrect: Het commentaar mist belangrijke informatie of bevat substantiële fouten.
+
+Als een model geen fouten heeft, gebruik dan een lege fouten array.
+
+--------------------------------------------------------------------------------
+--- TEXT TO EVALUATE ---
+--------------------------------------------------------------------------------
+{
+  "original_comment": "// het slidenummer van de huidige Slide_x000D_",
+  "model_predictions": [
+    {
+      "model_name": "Qwen/CodeQwen1.5-7B",
+      "predicted_comment": "// het sliden nummer van de huidige slide_x000D_"
+    },
+    {
+      "model_name": "bigcode/starcoder2-7b",
+      "predicted_comment": "// het slide dat getoond wordt_x000D_"
+    },
+    {
+      "model_name": "google/codegemma-7b",
+      "predicted_comment": "// het slidenummer van de huidige slide_x000D_"
+    },
+    {
+      "model_name": "ibm-granite/granite-8b-code-base",
+      "predicted_comment": "// het slidenummer van de huidige slide_x000D_\n_x000D_"
+    },
+    {
+      "model_name": "meta-llama/CodeLlama-7b-hf",
+      "predicted_comment": "// het slidenummer van de huidige Slide_x000D_"
+    }
+  ]
+}
+
+================================================================================

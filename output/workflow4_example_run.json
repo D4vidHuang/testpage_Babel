@@ -1,0 +1,110 @@
+================================================================================
+Evaluation Summary
+================================================================================
+
+Instance: 60_1
+  Configuration: grouped_judge_evaluator
+    Judge Model: anthropic/claude-3.5-sonnet
+    Evaluation: I'll evaluate each model's predicted comment based on the provided taxonomy. Here's my analysis:
+
+{
+  "evaluations": [
+    {
+      "model_name": "Qwen/CodeQwen1.5-7B",
+      "errors": ["SE-TS"],
+      "explanation": "The comment is too detailed and specific, providing a line-by-line explanation of how the algorithm works internally. While accurate, it goes beyond what's needed for effective documentation."
+    },
+    {
+      "model_name": "bigcode/starcoder2-7b",
+      "errors": [],
+      "explanation": "The comment is concise and accurate, providing the essential information about the algorithm along with its time and space complexity. No errors detected."
+    },
+    {
+      "model_name": "google/codegemma-7b",
+      "errors": ["SE-MD"],
+      "explanation": "The comment is too minimal, just saying 'algorithm' without providing any meaningful information about what the code does or its purpose."
+    },
+    {
+      "model_name": "ibm-granite/granite-8b-code-base",
+      "errors": ["SE-MD"],
+      "explanation": "The comment is too minimal, just saying 'd algorithm' without providing any meaningful information about what the code does or its purpose."
+    },
+    {
+      "model_name": "meta-llama/CodeLlama-7b-hf",
+      "errors": [],
+      "explanation": "The comment is concise and informative, providing the algorithm name and its complexity characteristics. No errors detected."
+    }
+  ]
+}
+
+Instance: 294_12
+  Configuration: grouped_judge_evaluator
+    Judge Model: anthropic/claude-3.5-sonnet
+    Evaluation: I'll evaluate each model's predicted comment against the original comment "// set a title, size and the stack pane as the root of the scene graph".
+
+{
+  "evaluations": [
+    {
+      "model_name": "Qwen/CodeQwen1.5-7B",
+      "errors": ["SE-MD"],
+      "explanation": "The comment 'for the stage' is too brief and misses important details about setting the size and adding the BorderPane as root of the scene graph."
+    },
+    {
+      "model_name": "bigcode/starcoder2-7b",
+      "errors": ["SE-MD"],
+      "explanation": "The comment 'for the stage' is too brief and misses important details about setting the size and adding the BorderPane as root of the scene graph."
+    },
+    {
+      "model_name": "google/codegemma-7b",
+      "errors": ["SE-MD", "SE-HA3"],
+      "explanation": "The comment 'and add the layout to the scene' misses mentioning the title and size settings. Also makes an educated guess about 'adding layout' which is only part of what's happening."
+    },
+    {
+      "model_name": "ibm-granite/granite-8b-code-base",
+      "errors": ["SE-MD"],
+      "explanation": "The comment 'for the stage' is too brief and misses important details about setting the size and adding the BorderPane as root of the scene graph."
+    },
+    {
+      "model_name": "meta-llama/CodeLlama-7b-hf",
+      "errors": ["SE-MD"],
+      "explanation": "The comment 'for the stage' is too brief and misses important details about setting the size and adding the BorderPane as root of the scene graph."
+    }
+  ]
+}
+
+All models produced comments that were too brief and missed important details about the full functionality being implemented in the code. The main error across all models is Missing Details (SE-MD), as they fail to capture the complete set of operations: setting title, size, and adding the BorderPane as the scene graph root. Google's CodeGemma additionally makes an educated guess that focuses only on the layout aspect while missing other key operations.
+
+Instance: 1566_0
+  Configuration: grouped_judge_evaluator
+    Judge Model: anthropic/claude-3.5-sonnet
+    Evaluation: I'll evaluate each model's predicted comment according to the taxonomy:
+
+{
+  "evaluations": [
+    {
+      "model_name": "Qwen/CodeQwen1.5-7B",
+      "errors": ["MS-LT", "SE-MD"],
+      "explanation": "The model continues generating additional unrelated program descriptions (late termination) and misses mentioning the area calculation requirement in the initial description (missing details)."
+    },
+    {
+      "model_name": "bigcode/starcoder2-7b",
+      "errors": ["SE-CS1", "MS-CC"],
+      "explanation": "The model copies code from the context instead of generating a proper comment, and includes commented-out code snippets."
+    },
+    {
+      "model_name": "google/codegemma-7b",
+      "errors": ["SE-MD"],
+      "explanation": "The comment misses mentioning the area calculation requirement, which is a key functionality of the program."
+    },
+    {
+      "model_name": "ibm-granite/granite-8b-code-base",
+      "errors": ["SE-CS1", "MS-CC"],
+      "explanation": "The model copies code from the context verbatim instead of generating a proper comment."
+    },
+    {
+      "model_name": "meta-llama/CodeLlama-7b-hf",
+      "errors": ["SE-MD", "SE-TS"],
+      "explanation": "The comment focuses only on the area calculation aspect while missing the triangle type classification. It also includes unnecessary specific test cases making it too specific."
+    }
+  ]
+}

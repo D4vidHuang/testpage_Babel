@@ -1,0 +1,167 @@
+================================================================================
+WORKFLOW PROMPT SIMULATION
+================================================================================
+Workflow Type: hierarchical
+Language: English
+Generated: 2026-02-05 09:23:49
+================================================================================
+
+Loaded prompt module: core.prompting.prompt_english
+
+--------------------------------------------------------------------------------
+WORKFLOW CONFIGURATION
+--------------------------------------------------------------------------------
+Name: Hierarchical Evaluation
+Description: Category-clustered evaluation (Workflow 6)
+System Prompt: basic
+Output Format: basic
+Uses Clusters: Yes
+
+NOTE: Showing cluster 'linguistic_grammar' as example (hierarchical workflows process multiple clusters)
+
+================================================================================
+INSTANCE 1: 60_1
+================================================================================
+
+[METADATA]
+  Language: English
+  File ID:  60_1
+
+[ORIGINAL COMMENT]
+  //bellman ford algorithm for shortest distance from a source node to all the remaining nodes
+
+[MODEL PREDICTIONS]
+  - Qwen/CodeQwen1.5-7B:
+     d algorithm is used to find the shortest path between vertices in a graph.
+//It is a dynamic progra...
+  - bigcode/starcoder2-7b:
+    d algorithm
+//Time Complexity : O(V*E)
+//Space Complexity : O(V)
+  - google/codegemma-7b:
+     algorithm
+  - ibm-granite/granite-8b-code-base:
+    d algorithm
+  - meta-llama/CodeLlama-7b-hf:
+     algorithm
+
+//Time complexity: O(V*E)
+
+//Space complexity: O(V)
+
+################################################################################
+# COMPLETE PROMPT SENT TO JUDGE MODEL
+################################################################################
+
+================================================================================
+[1] SYSTEM MESSAGE
+================================================================================
+You are an expert evaluator. You analyze Java code, comments, and documentation for correctness based on a given taxonomy of errors.\n\nBias Mitigation Instructions:\n- Avoid Verbosity Bias: Do not favor longer comments. Evaluate based on correctness.\n- Ensure Consistency: Apply the same standards to all predictions.\n- Prevent Systematic Bias: Evaluate each instance independently based on the taxonomy.
+
+================================================================================
+[2] USER MESSAGE
+================================================================================
+You are evaluating code comments for LINGUISTIC AND GRAMMATICAL CORRECTNESS only.\n\nRelevant error categories for this evaluation:\n{
+  "Grammar": [
+    {
+      "id": "LG-GR1",
+      "name": "Plurality",
+      "description": "",
+      "inclusion": "incorrect usage of plurality rules\n(the subject and verb in a sentence do not agree in number. For example, \"The book are on the table\" should be \"The book is on the table.\")",
+      "exclusion": ""
+    },
+    {
+      "id": "LG-GR2",
+      "name": "Conjugation",
+      "description": "",
+      "inclusion": "Incorrect usage of conjugation rules",
+      "exclusion": ""
+    },
+    {
+      "id": "LG-GR3",
+      "name": "Gendering",
+      "description": "",
+      "inclusion": "incorrect gendering in case the language has gendered nouns",
+      "exclusion": ""
+    },
+    {
+      "id": "LG-GR4",
+      "name": "Spelling",
+      "description": "",
+      "inclusion": "Incorrect spelling",
+      "exclusion": ""
+    },
+    {
+      "id": "LG-GR5",
+      "name": "Capitalization",
+      "description": "",
+      "inclusion": "Prediction capitalizes letters that grammatically is not correct to capitalize:\ne.g all capitals, every word begins with capital",
+      "exclusion": ""
+    },
+    {
+      "id": "LG-GR6",
+      "name": "Cohesion",
+      "description": "",
+      "inclusion": "1) Mistake in using a language that involves organizing words and phrases that don’t make sense (incoherence).\n\n2) Missing (or inappropriate usage of) a comma or a quotation mark\n\n3) Lack of local cohesion, which is logical and grammatical consistency between consecutive, adjacent sentences in paragraphs. Significant disorders of the coherence of the statement are, for example, paragraphs built from a sequence of sentences that are neither logically nor grammatically related to each other (a stream of loose thoughts, associations).\n\n4) Syntax errors in writing refer to mistakes in the arrangement of words and phrases in a sentence that violate the rules of grammar and sentence structure\n- Run-On Sentences: These happen when two or more independent clauses are joined without appropriate punctuation or conjunctions. For instance, \"I like to read I also enjoy writing.\"\n- Misplaced Modifiers: This error occurs when a word or phrase is placed too far away from the word it is meant to modify, leading to confusion or ambiguity. For example, \"Running quickly, the bus was missed.\" This suggests that the bus was running quickly, not the person.\n- Double Negatives: Using two negative words in a sentence can create confusion or ambiguity. For example, \"I don't want none of that\" should be \"I don't want any of that.\"\n- Lack of Parallel Structure: This occurs when a list of items in a sentence is not presented in a parallel manner. For example, \"She likes hiking, to swim, and reading.\" This should be \"She likes hiking, swimming, and reading.\"",
+      "exclusion": ""
+    }
+  ],
+  "Linguistic": [
+    {
+      "id": "LG-IS",
+      "name": "Usage of incorrect synonym",
+      "description": "",
+      "inclusion": "Usage of a similar word with an incorrect meaning in context\n(e.g. home->house)",
+      "exclusion": "Exclude synonyms that are contextually appropriate, even if they are not the most precise term."
+    }
+  ]
+}\n\nIMPORTANT: Focus ONLY on the error types listed above. Ignore other potential issues—they will be evaluated separately.\n\nFor each error category above, determine if the error is present based on the inclusion criteria. Always check exclusion criteria before confirming.
+
+Expert accuracy labels:
+- correct: The predicted comment captures all information from the original comment; extra relevant details are acceptable.
+- partially_correct: The comment is mostly right but has a small mistake (e.g., minor typo, wrong variable name, or slight omission).
+- incorrect: The comment misses important information or contains substantial errors beyond small fixes.
+
+Return structured JSON with results for each model:
+{
+  "evaluations": [
+    {
+      "model_name": "<model_identifier>",
+      "errors": ["<error_id>", ...],
+      "explanation": "Short explanation of errors found.",
+      "overall_quality": "<correct|partially_correct|incorrect>"
+    }
+  ]
+}
+If a model has no errors, use an empty errors array.
+
+--------------------------------------------------------------------------------
+--- TEXT TO EVALUATE ---
+--------------------------------------------------------------------------------
+{
+  "original_comment": "//bellman ford algorithm for shortest distance from a source node to all the remaining nodes",
+  "model_predictions": [
+    {
+      "model_name": "Qwen/CodeQwen1.5-7B",
+      "predicted_comment": "//bellman for d algorithm is used to find the shortest path between vertices in a graph.\n//It is a dynamic programming algorithm that works by relaxing the edges of the graph\n//repeatedly until the shortest path is found.\n\n//The algorithm starts by initializing the distance of the source vertex to 0 and the distance\n//of all other vertices to infinity. It then relaxes the edges of the graph by updating the\n//distance of the adjacent vertices if the distance of the source vertex plus the weight of\n//the edge is less than the current distance of the adjacent vertex"
+    },
+    {
+      "model_name": "bigcode/starcoder2-7b",
+      "predicted_comment": "//bellman ford algorithm\n//Time Complexity : O(V*E)\n//Space Complexity : O(V)"
+    },
+    {
+      "model_name": "google/codegemma-7b",
+      "predicted_comment": "//bellman ford algorithm"
+    },
+    {
+      "model_name": "ibm-granite/granite-8b-code-base",
+      "predicted_comment": "//bellman ford algorithm"
+    },
+    {
+      "model_name": "meta-llama/CodeLlama-7b-hf",
+      "predicted_comment": "//bellman ford algorithm\n\n//Time complexity: O(V*E)\n\n//Space complexity: O(V)"
+    }
+  ]
+}
+
+================================================================================
