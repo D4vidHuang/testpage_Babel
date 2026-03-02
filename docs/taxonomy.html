@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error Taxonomy — EMSE-Babel</title>
+    <meta name="description"
+        content="Complete error taxonomy with inclusion and exclusion criteria for the EMSE-Babel multilingual LLM comment evaluation benchmark." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <style>
+        /* ── CSS Variables ── */
+        :root {
+            --bg: #0f1117;
+            --bg2: #161b27;
+            --bg3: #1e2535;
+            --border: #2a3144;
+            --border2: #3a4460;
+            --text1: #e8ecf4;
+            --text2: #a8b4cc;
+            --text3: #6a7898;
+            --accent: #00a6d6;
+            /* TU Delft cyan */
+            --yellow: #f9be00;
+            --green: #2ecc71;
+            --red: #e74c3c;
+            --purple: #9b59b6;
+            --orange: #e67e22;
+            --teal: #1abc9c;
+            --pink: #e91e8c;
+            --blue: #3498db;
+            --brown: #795548;
+            --radius: 12px;
+            --shadow: 0 4px 24px rgba(0, 0, 0, .35);
+        }
+
+        /* ── Reset & Base ── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text1);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* ── Nav ── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 17, 23, .92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            height: 54px;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-badge {
+            background: rgba(0, 166, 214, .15);
+            color: var(--accent);
+            border: 1px solid rgba(0, 166, 214, .3);
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 20px;
+        }
+
+        .nav-back {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--text2);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color .15s;
+        }
+
+        .nav-back:hover {
+            color: var(--accent);
+        }
+
+        /* ── Hero ── */
+        .hero {
+            background: linear-gradient(135deg, #0d1520 0%, #111827 50%, #0a1628 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 52px 40px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text1);
+            margin-bottom: 10px;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero p {
+            color: var(--text2);
+            font-size: 15px;
+            max-width: 680px;
+            margin: 0 auto 28px;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-pill {
+            background: var(--bg3);
+            border: 1px solid var(--border2);
+            padding: 8px 22px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text1);
+        }
+
+        .stat-pill span {
+            color: var(--accent);
+        }
+
+        /* ── Controls ── */
+        .controls {
+            position: sticky;
+            top: 54px;
+            z-index: 90;
+            background: rgba(15, 17, 23, .94);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 32px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+            max-width: 380px;
+        }
+
+        .search-wrap svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text3);
+            pointer-events: none;
+        }
+
+        #search {
+            width: 100%;
+            background: var(--bg3);
+            border: 1px solid var(--border2);
+            color: var(--text1);
+            border-radius: 8px;
+            padding: 8px 12px 8px 38px;
+            font-size: 13px;
+            outline: none;
+            transition: border-color .15s;
+        }
+
+        #search::placeholder {
+            color: var(--text3);
+        }
+
+        #search:focus {
+            border-color: var(--accent);
+        }
+
+        .filter-btns {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border2);
+            background: var(--bg3);
+            color: var(--text2);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .15s;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .count-badge {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--text3);
+            white-space: nowrap;
+        }
+
+        /* ── Main Layout ── */
+        main {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 36px 32px 80px;
+        }
+
+        /* ── Category Section ── */
+        .category-section {
+            margin-bottom: 44px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid;
+        }
+
+        .cat-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text1);
+        }
+
+        .category-count {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        /* ── Card Grid ── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px;
+        }
+
+        /* ── Error Code Card ── */
+        .error-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: border-color .2s, transform .2s, box-shadow .2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .error-card:hover {
+            border-color: var(--border2);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .error-card.hidden {
+            display: none;
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .code-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        .code-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text1);
+        }
+
+        .parent-tag {
+            margin-left: auto;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--text3);
+            background: var(--bg3);
+            padding: 2px 7px;
+            border-radius: 4px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .card-body {
+            padding: 14px 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card-desc {
+            font-size: 12.5px;
+            color: var(--text2);
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .criteria-block {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .criteria-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .criteria-label.inc {
+            color: var(--green);
+        }
+
+        .criteria-label.exc {
+            color: var(--red);
+        }
+
+        .criteria-text {
+            font-size: 12px;
+            color: var(--text2);
+            line-height: 1.55;
+            white-space: pre-line;
+            background: var(--bg3);
+            border-radius: 7px;
+            padding: 8px 11px;
+            border-left: 3px solid;
+        }
+
+        .criteria-text.inc {
+            border-color: rgba(46, 204, 113, .4);
+        }
+
+        .criteria-text.exc {
+            border-color: rgba(231, 76, 60, .4);
+        }
+
+        .criteria-empty {
+            font-size: 11px;
+            color: var(--text3);
+            font-style: italic;
+        }
+
+        /* ── Category colour map ── */
+        .cat-grammar {
+            --cat: #66BB6A;
+        }
+
+        .cat-hallucination {
+            --cat: #EF5350;
+        }
+
+        .cat-semantic {
+            --cat: #FF7043;
+        }
+
+        .cat-model {
+            --cat: #8D6E63;
+        }
+
+        .cat-memorization {
+            --cat: #FFA726;
+        }
+
+        .cat-syntax {
+            --cat: #78909C;
+        }
+
+        .cat-linguistic {
+            --cat: #42A5F5;
+        }
+
+        .cat-repetition {
+            --cat: #EC407A;
+        }
+
+        .cat-codesnippet {
+            --cat: #26C6DA;
+        }
+
+        .cat-wronglang {
+            --cat: #26A69A;
+        }
+
+        .cat-format {
+            --cat: #AB47BC;
+        }
+
+        .cat-special {
+            --cat: #B0BEC5;
+        }
+
+        .category-header {
+            border-color: var(--cat, var(--accent));
+        }
+
+        .cat-icon {
+            background: color-mix(in srgb, var(--cat, var(--accent)) 15%, transparent);
+            color: var(--cat, var(--accent));
+        }
+
+        .code-badge {
+            background: color-mix(in srgb, var(--cat, var(--accent)) 15%, transparent);
+            color: var(--cat, var(--accent));
+            border: 1px solid color-mix(in srgb, var(--cat, var(--accent)) 35%, transparent);
+        }
+
+        .category-count {
+            background: color-mix(in srgb, var(--cat, var(--accent)) 15%, transparent);
+            color: var(--cat, var(--accent));
+        }
+
+        /* ── No results ── */
+        #no-results {
+            display: none;
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text3);
+            font-size: 15px;
+        }
+
+        #no-results .em {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        /* ── Footer ── */
+        footer {
+            text-align: center;
+            padding: 28px;
+            font-size: 12px;
+            color: var(--text3);
+            border-top: 1px solid var(--border);
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border2);
+            border-radius: 3px;
+        }
+
+        /* ── Highlight match ── */
+        mark {
+            background: rgba(249, 190, 0, .3);
+            color: var(--yellow);
+            border-radius: 2px;
+            padding: 0 1px;
+        }
+
+        @media (max-width: 640px) {
+            .hero {
+                padding: 36px 20px 28px;
+            }
+
+            main {
+                padding: 24px 16px 60px;
+            }
+
+            .controls {
+                padding: 12px 16px;
+            }
+
+            nav {
+                padding: 0 16px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a class="nav-logo" href="index.html">
+            <span
+                style="background:var(--accent);color:#fff;font-size:11px;font-weight:800;padding:3px 7px;border-radius:6px">E</span>
+            EMSE-Babel
+            <span class="nav-badge">TU Delft</span>
+        </a>
+        <a class="nav-back" href="index.html">← Back to Dashboard</a>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+        <h1>Error <span>Taxonomy</span> Reference</h1>
+        <p>Complete error taxonomy used for human expert annotation of LLM-generated code comments, including inclusion
+            and exclusion criteria for each error code.</p>
+        <div class="stats-row" id="hero-stats">
+            <!-- filled by JS -->
+        </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+        <div class="search-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+            </svg>
+            <input type="text" id="search" placeholder="Search codes, names, criteria…" autocomplete="off" />
+        </div>
+        <div class="filter-btns" id="filter-btns"></div>
+        <span class="count-badge" id="count-badge"></span>
+    </div>
+
+    <!-- MAIN -->
+    <main id="main">
+        <div id="no-results">
+            <div class="em">🔍</div>
+            No error codes match your search.
+        </div>
+    </main>
+
+    <footer>
+        <a href="index.html">← EMSE-Babel Dashboard</a> &nbsp;·&nbsp;
+        TU Delft · AISE Lab · Jonathan Katzy, Yongcheng Huang et al.
+    </footer>
+
+    <script>
+        /* ── Taxonomy data (embedded) ── */
+        const TAXONOMY = {
+            "": {
+                label: "Special", icon: "⚡", cls: "cat-special",
+                items: [
+                    { id: "E", name: "Excluded", description: "", inclusion: "1) Too little context (short file)\n2) Autogenerated content\n3) Original comment is in wrong language\n4) Code that is commented out", exclusion: "" },
+                    { id: "M", name: "Miscellaneous", description: "", inclusion: "Anything that does not fall into any of the above categories", exclusion: "" }
+                ]
+            },
+            "Code Snippet": {
+                label: "Code Snippet", icon: "💻", cls: "cat-codesnippet",
+                items: [
+                    { id: "SE-CS1", name: "Commented out code", description: "", inclusion: "Code that resides in a code block", exclusion: "" },
+                    { id: "SE-CS2", name: "Code intended to run", description: "", inclusion: "Code that the model intends to run", exclusion: "" }
+                ]
+            },
+            "Grammar": {
+                label: "Grammar", icon: "✍️", cls: "cat-grammar",
+                items: [
+                    { id: "LG-GR1", name: "Plurality", description: "", inclusion: "incorrect usage of plurality rules\n(the subject and verb in a sentence do not agree in number. For example, \"The book are on the table\" should be \"The book is on the table.\")", exclusion: "" },
+                    { id: "LG-GR2", name: "Conjugation", description: "", inclusion: "Incorrect usage of conjugation rules", exclusion: "" },
+                    { id: "LG-GR3", name: "Spelling Error", description: "", inclusion: "1) Misspelled words\n2) Incorrect capitalisation", exclusion: "" },
+                    { id: "LG-GR4", name: "Punctuation Error", description: "", inclusion: "Incorrect usage of punctuation marks or their complete absence", exclusion: "" },
+                    { id: "LG-GR5", name: "Gendering", description: "", inclusion: "Incorrect usage of gendering rules in the target language", exclusion: "" },
+                    { id: "LG-GR6", name: "Preposition", description: "", inclusion: "Incorrect usage of prepositions in the target language\n(e.g., 'at the table' vs 'on the table')", exclusion: "" }
+                ]
+            },
+            "Hallucination": {
+                label: "Hallucination", icon: "👻", cls: "cat-hallucination",
+                items: [
+                    { id: "SE-HA1", name: "Misplaced Facts", description: "", inclusion: "Randomly inserted facts (such as names, dates, or events) are present in the content and do not align with the context or expected content.\nFor example, referencing an event that did not happen or mentioning the wrong/fictional person.", exclusion: "" },
+                    { id: "SE-HA2", name: "Contextual Discrepancy", description: "", inclusion: "1) Hallucination not grounded in the provided context.", exclusion: "" },
+                    { id: "SE-HA3", name: "Factual Inaccuracy", description: "", inclusion: "1) Syntactically correct but semantically or factually incorrect\n2) Grounded in the provided context.", exclusion: "" }
+                ]
+            },
+            "Incorrect comment format": {
+                label: "Comment Format", icon: "📝", cls: "cat-format",
+                items: [
+                    { id: "ST-IF1", name: "Style Inconsistency", description: "", inclusion: "1) Model uses outdated format of javadoc\n2) Model uses comment format that is inconsistent with the standards\n3) Model repeated auto-generated-comment like format which is not informative enough, instead of generating an actual description\n4) Model does not follow the javadoc format that is present in the rest of the file (if present format is correct)", exclusion: "" },
+                    { id: "ST-IF2", name: "Omitted Identifier", description: "", inclusion: "1) Model starts enlisting @params, but misses some of them\n2) Generation started with a tag @return but then doesn't have @params\n3) Generated @params, but does not have @return for a method that does not return void", exclusion: "" }
+                ]
+            },
+            "Linguistic": {
+                label: "Linguistic", icon: "🗣️", cls: "cat-linguistic",
+                items: [
+                    { id: "LG", name: "Linguistic Error", description: "", inclusion: "Linguistic errors are all errors related to the linguistic content of the generated text", exclusion: "" },
+                    { id: "LG-GR", name: "Grammar", description: "", inclusion: "Language is correct, grammatical mistake was made.", exclusion: "Exclude errors that are related to stylistic choices rather than grammatical correctness (e.g., passive vs. active voice preferences, unless clearly incorrect or unsuitable for certain languages)." },
+                    { id: "LG-IS", name: "Usage of incorrect synonym", description: "", inclusion: "Usage of a similar word with an incorrect meaning in context\n(e.g. home→house)", exclusion: "Exclude synonyms that are contextually appropriate, even if they are not the most precise term." },
+                    { id: "LG-WL", name: "Wrong language", description: "", inclusion: "The model predicts a comment (or significant part of it) in a language other than the target language", exclusion: "" }
+                ]
+            },
+            "Memorization": {
+                label: "Memorization", icon: "🧠", cls: "cat-memorization",
+                items: [
+                    { id: "MS-ME1", name: "Contains PII", description: "Personally identifiable information (PII) is information that, when used alone or with other relevant data, can identify an individual.", inclusion: "Personally identifiable information is included in the generated comment (fictional or did not occur in the original prompt)", exclusion: "Exclude non-specific information that cannot be used to identify an individual (e.g., generic job titles, generic first names in a certain language)." },
+                    { id: "MS-ME2", name: "Contains URL", description: "", inclusion: "URL for a file or repository is included", exclusion: "" },
+                    { id: "MS-ME3", name: "Verbatim Memorization", description: "", inclusion: "1) The model memorized the content verbatim\n2) the text would not be generated if not for memorization", exclusion: "" }
+                ]
+            },
+            "Model-specific": {
+                label: "Model-specific", icon: "🤖", cls: "cat-model",
+                items: [
+                    { id: "MS", name: "Model Specific", description: "", inclusion: "Model specific errors are all errors which are related to the workings of LLMs", exclusion: "" },
+                    { id: "MS-IG", name: "Incoherent Generation", description: "", inclusion: "Model outputs random words which have no logic between them", exclusion: "" },
+                    { id: "MS-CC", name: "Copy Context", description: "", inclusion: "Model copies the surrounding context verbatim", exclusion: "" },
+                    { id: "MS-ME", name: "Memorization", description: "", inclusion: "Model recognised the code to some capacity", exclusion: "" },
+                    { id: "MS-ET", name: "Early Termination", description: "", inclusion: "Model stops generating in the middle of prediction, while the comment is clearly not complete or did not generate anything", exclusion: "" },
+                    { id: "MS-LT", name: "Late Termination", description: "", inclusion: "The comment continues producing content even though it should have stopped earlier.\ne.g.\n1. When it includes unnecessary empty tags (@version)\n2. Continues adding line comments even though it is unnecessary", exclusion: "" },
+                    { id: "MS-RE", name: "Repetition", description: "", inclusion: "Model generates and repeats what it has already said in some capacity", exclusion: "" }
+                ]
+            },
+            "Repetition": {
+                label: "Repetition", icon: "🔁", cls: "cat-repetition",
+                items: [
+                    { id: "MS-RE1", name: "Pattern repetition", description: "", inclusion: "Model generated a repeating pattern: eg. 1,2,3,4,5,6,", exclusion: "" },
+                    { id: "MS-RE2", name: "Verbatim repetition", description: "", inclusion: "Model generated verbatim repetition: eg. i am repeating i am repeating i am repeating", exclusion: "" }
+                ]
+            },
+            "Semantic": {
+                label: "Semantic", icon: "💡", cls: "cat-semantic",
+                items: [
+                    { id: "SE", name: "Semantic error", description: "", inclusion: "Semantic errors are all errors related to the semantics or meaning of the generated content", exclusion: "" },
+                    { id: "SE-MD", name: "Missing details", description: "", inclusion: "1) Description does not fully describe the content of the summarized code.\n2) Current information does not describe the full functionality of code being summarized.\n3) Current information does not describe the entire purpose of the summarized code.\n4) Generated comment is too generic", exclusion: "1) Exclude high-level summaries that align with the expected response format\n2) Exclude comments that are general but still provide sufficient understanding of the code's functionality, especially in simple or trivial code segments." },
+                    { id: "SE-TS", name: "Too specific", description: "", inclusion: "Generated comment is too specific. Includes detailed summary of every line, which defeats the point of documentation and summarization", exclusion: "" },
+                    { id: "SE-HA", name: "Hallucination", description: "", inclusion: "Category for hallucination generations, i.e. factually incorrect or not related to input prompt", exclusion: "" },
+                    { id: "SE-CS", name: "Code snippet inclusion", description: "", inclusion: "Model generates actual code outside of comment", exclusion: "1) Exclude comments that include minimal code snippets for clarity or example purposes\n2) Exclude short generated code snippets that are created for completion and they fit into the program well" }
+                ]
+            },
+            "Syntax": {
+                label: "Syntax", icon: "🔧", cls: "cat-syntax",
+                items: [
+                    { id: "ST", name: "Syntax", description: "", inclusion: "Syntax errors are all errors which are related to the syntax of the comments", exclusion: "" },
+                    { id: "ST-IF", name: "Incorrect comment format", description: "", inclusion: "1) Model uses outdated format of javadoc\n2) Model uses comment format that is inconsistent with the standards\n3) Errors with javadoc format", exclusion: "" }
+                ]
+            },
+            "Wrong language": {
+                label: "Wrong Language", icon: "🌍", cls: "cat-wronglang",
+                items: [
+                    { id: "LG-WL1", name: "Undesired translations", description: "", inclusion: "Translations that are correct but undesired in the language because the words are seldom used in that context", exclusion: "Exclude correct use of foreign words that are commonly integrated into the language being used" },
+                    { id: "LG-WL2", name: "Incorrect language", description: "", inclusion: "The model predicts a comment (or significant part of it) in a language other than the target language", exclusion: "" }
+                ]
+            }
+        };
+
+        /* ── Build page ── */
+        const main = document.getElementById('main');
+        const noRes = document.getElementById('no-results');
+        const searchEl = document.getElementById('search');
+        const filterBtns = document.getElementById('filter-btns');
+        const countEl = document.getElementById('count-badge');
+        const heroStats = document.getElementById('hero-stats');
+
+        let totalCodes = 0, totalCats = 0;
+        Object.values(TAXONOMY).forEach(cat => { totalCodes += cat.items.length; totalCats++; });
+
+        // Hero stats
+        heroStats.innerHTML = `
+  <div class="stat-pill"><span>${totalCats}</span> Categories</div>
+  <div class="stat-pill"><span>${totalCodes}</span> Error Codes</div>
+  <div class="stat-pill"><span>5</span> Languages</div>
+  <div class="stat-pill"><span>5</span> Target LLMs</div>
+`;
+
+        // Filter "All" button
+        const allBtn = makeFilterBtn('All', true, null);
+        filterBtns.appendChild(allBtn);
+
+        // Build sections
+        Object.entries(TAXONOMY).forEach(([key, cat]) => {
+            // Filter button
+            const fb = makeFilterBtn(cat.label, false, key);
+            filterBtns.appendChild(fb);
+
+            // Section
+            const section = document.createElement('div');
+            section.className = `category-section ${cat.cls}`;
+            section.dataset.cat = key;
+
+            // Header
+            const hdr = document.createElement('div');
+            hdr.className = 'category-header';
+            hdr.innerHTML = `
+    <div class="cat-icon">${cat.icon}</div>
+    <div>
+      <div class="category-title">${cat.label}</div>
+    </div>
+    <div class="category-count">${cat.items.length} code${cat.items.length !== 1 ? 's' : ''}</div>
+  `;
+            section.appendChild(hdr);
+
+            // Grid
+            const grid = document.createElement('div');
+            grid.className = 'cards-grid';
+
+            cat.items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'error-card';
+                card.dataset.id = item.id.toLowerCase();
+                card.dataset.name = item.name.toLowerCase();
+                card.dataset.inc = (item.inclusion || '').toLowerCase();
+                card.dataset.exc = (item.exclusion || '').toLowerCase();
+                card.dataset.cat = key;
+
+                const isLeaf = item.id.includes('-');
+
+                card.innerHTML = `
+      <div class="card-top">
+        <span class="code-badge">${item.id}</span>
+        <span class="code-name">${item.name}</span>
+        ${!isLeaf ? `<span class="parent-tag">parent</span>` : ''}
+      </div>
+      <div class="card-body">
+        ${item.description ? `<div class="card-desc">${item.description}</div>` : ''}
+        <div class="criteria-block">
+          <div class="criteria-label inc">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            Inclusion criteria
+          </div>
+          ${item.inclusion
+                        ? `<div class="criteria-text inc">${escHtml(item.inclusion)}</div>`
+                        : `<span class="criteria-empty">No specific criteria defined.</span>`}
+        </div>
+        ${item.exclusion ? `
+        <div class="criteria-block">
+          <div class="criteria-label exc">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            Exclusion criteria
+          </div>
+          <div class="criteria-text exc">${escHtml(item.exclusion)}</div>
+        </div>` : ''}
+      </div>
+    `;
+                grid.appendChild(card);
+            });
+
+            section.appendChild(grid);
+            main.insertBefore(section, noRes);
+        });
+
+        updateCount();
+
+        /* ── Filter buttons ── */
+        function makeFilterBtn(label, active, catKey) {
+            const btn = document.createElement('button');
+            btn.className = 'filter-btn' + (active ? ' active' : '');
+            btn.textContent = label;
+            if (catKey !== null) {
+                // Find color
+                const cat = TAXONOMY[catKey];
+                if (cat) {
+                    const tmp = document.createElement('div');
+                    tmp.className = cat.cls;
+                    document.body.appendChild(tmp);
+                    const c = getComputedStyle(tmp).getPropertyValue('--cat').trim();
+                    document.body.removeChild(tmp);
+                    if (active || catKey === null) { }
+                    btn.dataset.color = c;
+                }
+            }
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCat = catKey;
+                filterAndSearch();
+                // Style active btn
+                if (catKey !== null && btn.dataset.color) {
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        b.style.background = '';
+                        b.style.borderColor = '';
+                        b.style.color = '';
+                    });
+                    btn.style.background = btn.dataset.color + '22';
+                    btn.style.borderColor = btn.dataset.color + '66';
+                    btn.style.color = btn.dataset.color;
+                } else {
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        b.style.background = '';
+                        b.style.borderColor = '';
+                        b.style.color = '';
+                    });
+                }
+            });
+            return btn;
+        }
+
+        let currentCat = null;
+        let currentQuery = '';
+
+        searchEl.addEventListener('input', () => {
+            currentQuery = searchEl.value.trim().toLowerCase();
+            filterAndSearch();
+        });
+
+        function filterAndSearch() {
+            const sections = document.querySelectorAll('.category-section');
+            let visibleTotal = 0;
+
+            sections.forEach(sec => {
+                const catKey = sec.dataset.cat;
+                if (currentCat !== null && catKey !== currentCat) {
+                    sec.style.display = 'none';
+                    return;
+                }
+                sec.style.display = '';
+
+                const cards = sec.querySelectorAll('.error-card');
+                let visInSec = 0;
+                cards.forEach(card => {
+                    const matches = !currentQuery ||
+                        card.dataset.id.includes(currentQuery) ||
+                        card.dataset.name.includes(currentQuery) ||
+                        card.dataset.inc.includes(currentQuery) ||
+                        card.dataset.exc.includes(currentQuery);
+                    card.classList.toggle('hidden', !matches);
+                    if (matches) visInSec++;
+                });
+                visibleTotal += visInSec;
+                // Hide section if no cards match
+                const grid = sec.querySelector('.cards-grid');
+                if (grid) grid.style.display = visInSec === 0 ? 'none' : '';
+                sec.querySelector('.category-header').style.display = visInSec === 0 ? 'none' : '';
+            });
+
+            noRes.style.display = visibleTotal === 0 ? 'block' : 'none';
+            updateCount(visibleTotal);
+        }
+
+        function updateCount(n) {
+            n = n !== undefined ? n : totalCodes;
+            countEl.textContent = `Showing ${n} of ${totalCodes} codes`;
+        }
+
+        function escHtml(s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+    </script>
+</body>
+
+</html>

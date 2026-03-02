@@ -1,32 +1,38 @@
 """
-LLM-as-a-Judge Accuracy Visualization
-======================================
-Plots weighted Cohen's kappa (quadratic) between judge models and human expert
-labels, broken down by language and prompt setting.
+LLM-as-a-Judge Accuracy
+========================
+Plots and saves:
+  1. judge_accuracy.{pdf,png}            — scatter of quadratic Cohen's κ
+  2. judge_cm_{lang}_{setting}.{pdf,png} — per-language×setting confusion matrices
+                                           (COLUMN-normalised: what did judge predict
+                                            for each human label?)
+  3. judge_cm_accumulated.{pdf,png}      — single aggregate CM across all conditions
+     All CMs use label order: Correct / Partial / Incorrect  (per paper)
 
-Data: data/raw_{Language}.parquet
-Output: opens an interactive Plotly HTML in browser; also saves HTML file.
+Self-contained: reads  data/raw_{Language}.parquet
+Output:         plots/out/
 """
 
 import math
-import os
 import re
+from collections import defaultdict
+from pathlib import Path
 
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import numpy as np
 import pandas as pd
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 from sklearn.metrics import cohen_kappa_score, confusion_matrix
 
-# ── Configuration ─────────────────────────────────────────────────────────────
-DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "docs")
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+# ── CONFIG ────────────────────────────────────────────────────────────────────
+DATA_DIR   = Path("data")
+OUT_DIR    = Path("plots/out")
+OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-SETTINGS = ["hierarchical", "cot", "standard", "rubric"]
-LANGUAGES = ["en", "zh", "pl", "nl", "el"]
-LANG_MAP = {"en": "English", "pl": "Polish", "zh": "Chinese", "nl": "Dutch", "el": "Greek"}
-LANG_DISPLAY = {"en": "English", "zh": "Chinese", "pl": "Polish", "nl": "Dutch", "el": "Greek"}
+SETTINGS   = ["standard", "cot", "hierarchical", "rubric"]
+LANGUAGES  = ["en", "zh", "pl", "nl", "el"]
+LANG_MAP   = {"en": "English", "zh": "Chinese", "pl": "Polish", "nl": "Dutch", "el": "Greek"}
+LANG_LABELS = {"en": "EN", "zh": "ZH", "pl": "PL", "nl": "NL", "el": "EL"}
 
 TARGET_LLMS = [
     "google/codegemma-7b",
@@ -35,7 +41,6 @@ TARGET_LLMS = [
     "bigcode/starcoder2-7b",
     "ibm-granite/granite-8b-code-base",
 ]
-
 JUDGE_MODELS = [
     "google_gemini-3-flash-preview_floor",
     "meituan_longcat-flash-chat_floor",
@@ -47,352 +52,299 @@ JUDGE_MODELS = [
     "deepseek_deepseek-v3_2_floor",
     "x-ai_grok-4_1-fast_floor",
 ]
-
 JUDGE_DISPLAY = {
-    "google_gemini-3-flash-preview_floor": "Gemini Flash",
-    "meituan_longcat-flash-chat_floor": "LongCat Flash",
-    "openai_gpt-oss-20b_floor": "GPT-OSS 20B",
-    "openai_gpt-oss-120b_floor": "GPT-OSS 120B",
-    "anthropic_claude-haiku-4_5_floor": "Claude Haiku",
-    "qwen_qwen3-coder-next_floor": "Qwen3 Coder",
-    "qwen_qwen3-vl-235b-a22b-instruct_floor": "Qwen3 VL 235B",
-    "deepseek_deepseek-v3_2_floor": "DeepSeek V3",
-    "x-ai_grok-4_1-fast_floor": "Grok 4.1 Fast",
+    "google_gemini-3-flash-preview_floor":      "Gemini Flash",
+    "meituan_longcat-flash-chat_floor":          "Longcat Flash",
+    "openai_gpt-oss-20b_floor":                  "GPT 20B",
+    "openai_gpt-oss-120b_floor":                 "GPT 120B",
+    "anthropic_claude-haiku-4_5_floor":          "Claude Haiku",
+    "qwen_qwen3-coder-next_floor":               "Qwen3 Coder",
+    "qwen_qwen3-vl-235b-a22b-instruct_floor":    "Qwen3 VL 235B",
+    "deepseek_deepseek-v3_2_floor":              "DeepSeek V3",
+    "x-ai_grok-4_1-fast_floor":                 "Grok 4.1 Fast",
+}
+MODEL_COLORS = {
+    "google_gemini-3-flash-preview_floor":      "#4285F4",
+    "meituan_longcat-flash-chat_floor":          "#F06292",
+    "openai_gpt-oss-20b_floor":                  "#FF9800",
+    "openai_gpt-oss-120b_floor":                 "#4CAF50",
+    "anthropic_claude-haiku-4_5_floor":          "#D32F2F",
+    "qwen_qwen3-coder-next_floor":               "#7B1FA2",
+    "qwen_qwen3-vl-235b-a22b-instruct_floor":    "#00BCD4",
+    "deepseek_deepseek-v3_2_floor":              "#795548",
+    "x-ai_grok-4_1-fast_floor":                 "#9E9E9E",
+}
+MODEL_MARKERS = {
+    "google_gemini-3-flash-preview_floor":      "o",
+    "meituan_longcat-flash-chat_floor":          "X",
+    "openai_gpt-oss-20b_floor":                  "s",
+    "openai_gpt-oss-120b_floor":                 "D",
+    "anthropic_claude-haiku-4_5_floor":          "^",
+    "qwen_qwen3-coder-next_floor":               "v",
+    "qwen_qwen3-vl-235b-a22b-instruct_floor":    "<",
+    "deepseek_deepseek-v3_2_floor":              "P",
+    "x-ai_grok-4_1-fast_floor":                 ">",
+}
+SETTING_DISPLAY = {
+    "standard": "Standard", "cot": "CoT",
+    "hierarchical": "Hier.", "rubric": "Rubric"
 }
 
-# Vibrant, accessible color palette
-JUDGE_COLORS = {
-    "google_gemini-3-flash-preview_floor": "#4285F4",
-    "meituan_longcat-flash-chat_floor": "#FF6B9D",
-    "openai_gpt-oss-20b_floor": "#FF9500",
-    "openai_gpt-oss-120b_floor": "#34A853",
-    "anthropic_claude-haiku-4_5_floor": "#EA4335",
-    "qwen_qwen3-coder-next_floor": "#9B59B6",
-    "qwen_qwen3-vl-235b-a22b-instruct_floor": "#00BCD4",
-    "deepseek_deepseek-v3_2_floor": "#795548",
-    "x-ai_grok-4_1-fast_floor": "#607D8B",
-}
+# Paper label order: Correct=2, Partial=1, Incorrect=0
+# But we show top-to-bottom as Correct / Partial / Incorrect (descending)
+LABEL_ORDER   = [2, 1, 0]          # numeric
+CLASS_NAMES   = ["Correct", "Partial", "Incorrect"]   # display
+SHOW_CONFUSION_MATRICES = True     # set False to skip per-lang/setting CMs
 
-JUDGE_SYMBOLS = {
-    "google_gemini-3-flash-preview_floor": "circle",
-    "meituan_longcat-flash-chat_floor": "x",
-    "openai_gpt-oss-20b_floor": "square",
-    "openai_gpt-oss-120b_floor": "diamond",
-    "anthropic_claude-haiku-4_5_floor": "triangle-up",
-    "qwen_qwen3-coder-next_floor": "triangle-down",
-    "qwen_qwen3-vl-235b-a22b-instruct_floor": "triangle-left",
-    "deepseek_deepseek-v3_2_floor": "pentagon",
-    "x-ai_grok-4_1-fast_floor": "star",
-}
+# ── STYLE ─────────────────────────────────────────────────────────────────────
+plt.rcParams.update({
+    "font.family":       "sans-serif",
+    "font.size":         9,
+    "axes.spines.top":   False,
+    "axes.spines.right": False,
+    "axes.grid":         True,
+    "grid.linestyle":    "--",
+    "grid.linewidth":    0.4,
+    "grid.alpha":        0.5,
+    "figure.dpi":        150,
+})
 
-SHOW_CONFUSION_MATRICES = True
+# ── HELPERS ───────────────────────────────────────────────────────────────────
+def _map_human(v):
+    if pd.isna(v): return np.nan
+    s = str(v).strip().lower()
+    return 2 if s == "correct" else 1 if s == "partial" else 0 if s == "incorrect" else np.nan
 
-# ── Label mappers ─────────────────────────────────────────────────────────────
-
-def _map_human_label(value):
-    if pd.isna(value):
-        return np.nan
-    v = str(value).strip().lower()
-    if v == "correct":
-        return 2
-    if v == "partial":
-        return 1
-    if v == "incorrect":
-        return 0
-    return np.nan
+def _map_judge(v):
+    if pd.isna(v): return np.nan
+    s = str(v).strip().lower()
+    return 2 if s == "correct" else 1 if s == "partially_correct" else 0 if s == "incorrect" else np.nan
 
 
-def _map_judge_label(value):
-    if pd.isna(value):
-        return np.nan
-    v = str(value).strip().lower()
-    if v == "correct":
-        return 2
-    if v == "partially_correct":
-        return 1
-    if v == "incorrect":
-        return 0
-    return np.nan
-
-
-# ── Data loading ──────────────────────────────────────────────────────────────
-
+# ── DATA LOADING ──────────────────────────────────────────────────────────────
 def load_records():
-    records = []
-    for language in LANGUAGES:
-        lang_name = LANG_MAP.get(language, language)
-        path = os.path.join(DATA_DIR, f"raw_{lang_name}.parquet")
-        if not os.path.exists(path):
-            print(f"  [warn] missing {path}")
+    """Returns list of records and cm_store dict for CMs."""
+    records  = []
+    cm_store = defaultdict(lambda: {"y_true": [], "y_pred": []})
+
+    for lang in LANGUAGES:
+        lang_name = LANG_MAP[lang]
+        path = DATA_DIR / f"raw_{lang_name}.parquet"
+        if not path.exists():
+            print(f"  [skip] {path} not found")
             continue
         df = pd.read_parquet(path)
 
         for judge_model in JUDGE_MODELS:
-            for judge_setting in SETTINGS:
+            for setting in SETTINGS:
                 y_true_all, y_pred_all = [], []
 
-                for target_llm in TARGET_LLMS:
-                    human_col = f"expert_accuracy_{target_llm}"
+                for tlm in TARGET_LLMS:
+                    human_col = f"expert_accuracy_{tlm}"
                     if human_col not in df.columns:
                         continue
-
-                    judge_cols = df.filter(
-                        regex=rf"^{re.escape(judge_model)}_{re.escape(judge_setting)}_"
-                        rf"{re.escape(target_llm)}_accuracy$"
-                    ).columns
-                    if len(judge_cols) == 0:
+                    pattern = rf"^{re.escape(judge_model)}_{re.escape(setting)}_{re.escape(tlm)}_accuracy$"
+                    judge_cols = [c for c in df.columns if re.match(pattern, c)]
+                    if not judge_cols:
                         continue
-
-                    judge_col = judge_cols[0]
-                    human = df[human_col].map(_map_human_label).to_numpy(dtype=float)
-                    pred = df[judge_col].map(_map_judge_label).to_numpy(dtype=float)
-                    mask = ~np.isnan(human) & ~np.isnan(pred)
+                    human = df[human_col].map(_map_human).to_numpy(float)
+                    pred  = df[judge_cols[0]].map(_map_judge).to_numpy(float)
+                    mask  = ~np.isnan(human) & ~np.isnan(pred)
                     if mask.sum() == 0:
                         continue
-
                     y_true_all.append(human[mask].astype(int))
                     y_pred_all.append(pred[mask].astype(int))
 
                 if not y_true_all:
                     continue
-
                 y_true = np.concatenate(y_true_all)
                 y_pred = np.concatenate(y_pred_all)
-                kappa = cohen_kappa_score(y_true, y_pred, weights="quadratic")
-                cm = confusion_matrix(y_true, y_pred, labels=[0, 1, 2], normalize="pred") * 100
+                kappa  = cohen_kappa_score(y_true, y_pred, weights="quadratic")
+                # Column-normalize: for each judge-predicted class, what fraction is each human label?
+                cm = confusion_matrix(y_true, y_pred, labels=LABEL_ORDER, normalize="pred") * 100
 
                 records.append({
-                    "language": language,
-                    "judge": judge_model,
-                    "setting": judge_setting,
-                    "kappa_weighted": kappa,
-                    "n_samples": int(len(y_true)),
-                    "confusion_matrix": cm,
+                    "language": lang,
+                    "judge":    judge_model,
+                    "setting":  setting,
+                    "kappa":    kappa,
+                    "n":        len(y_true),
+                    "cm":       cm,
                 })
+                cm_store[(lang, setting)]["y_true"].append(y_true)
+                cm_store[(lang, setting)]["y_pred"].append(y_pred)
 
-    return records
+    return records, cm_store
 
 
-# ── Main scatter plot ─────────────────────────────────────────────────────────
+# ── KAPPA SCATTER PLOT ────────────────────────────────────────────────────────
+def plot_kappa(records):
+    n_langs    = len(LANGUAGES)
+    n_settings = len(SETTINGS)
+    group_w    = n_settings
+    sep        = 0.5
 
-def plot_kappa_scatter(records):
-    group_width = len(SETTINGS)
-    lang_to_x = {lang: idx for idx, lang in enumerate(LANGUAGES)}
-    setting_offsets = {s: i for i, s in enumerate(SETTINGS)}
+    def xpos(li, si):
+        return li * (group_w + sep) + si
 
-    # Build one trace per judge model (for clean legend)
-    traces = {}
+    fig, ax = plt.subplots(figsize=(11, 4.5))
+
     for rec in records:
-        jm = rec["judge"]
-        x = lang_to_x[rec["language"]] * group_width + setting_offsets[rec["setting"]]
-        y = rec["kappa_weighted"]
-        hover = (
-            f"<b>{JUDGE_DISPLAY.get(jm, jm)}</b><br>"
-            f"Language: {LANG_DISPLAY.get(rec['language'], rec['language'])}<br>"
-            f"Setting: {rec['setting']}<br>"
-            f"κ (quadratic): <b>{y:.3f}</b><br>"
-            f"n samples: {rec['n_samples']}"
-        )
-        if jm not in traces:
-            traces[jm] = {"x": [], "y": [], "hover": []}
-        traces[jm]["x"].append(x)
-        traces[jm]["y"].append(y)
-        traces[jm]["hover"].append(hover)
+        li = LANGUAGES.index(rec["language"])
+        si = SETTINGS.index(rec["setting"])
+        x  = xpos(li, si)
+        ax.scatter(x, rec["kappa"],
+                   color=MODEL_COLORS.get(rec["judge"], "#888"),
+                   marker=MODEL_MARKERS.get(rec["judge"], "o"),
+                   s=55, alpha=0.92,
+                   edgecolors="white", linewidths=0.5, zorder=3)
 
-    fig = go.Figure()
+    for li in range(n_langs):
+        ax.axvspan(xpos(li, 0) - 0.5, xpos(li, n_settings-1) + 0.5,
+                   facecolor="#F5F5F5" if li % 2 == 0 else "white",
+                   alpha=1.0, zorder=0)
+    for li in range(1, n_langs):
+        ax.axvline(xpos(li, 0) - 0.5 - sep/2, color="#CCCCCC", linewidth=0.8, zorder=1)
 
-    # Alternating language-group shading
-    for i, lang in enumerate(LANGUAGES):
-        base = i * group_width
-        if i % 2 == 1:
-            fig.add_vrect(
-                x0=base - 0.5, x1=base + group_width - 0.5,
-                fillcolor="rgba(100,149,237,0.06)", line_width=0,
-                layer="below"
-            )
-        # Language divider lines
-        if i > 0:
-            fig.add_vline(
-                x=base - 0.5,
-                line=dict(color="rgba(150,150,150,0.4)", width=1, dash="dot")
-            )
+    for kref, lbl in [(0.2, "Fair"), (0.4, "Moderate"), (0.6, "Substantial")]:
+        ax.axhline(kref, color="#AAAAAA", linewidth=0.7, linestyle=":", zorder=1)
+        ax.text(xpos(n_langs-1, n_settings-1) + 0.6, kref, lbl,
+                va="center", ha="left", fontsize=7, color="#888")
 
-    # Reference line at κ = 0
-    fig.add_hline(y=0, line=dict(color="rgba(200,50,50,0.5)", width=1.5, dash="dash"))
-    # Guideline for "good" agreement (κ = 0.6)
-    fig.add_hline(y=0.6, line=dict(color="rgba(50,180,50,0.4)", width=1, dash="dot"),
-                  annotation_text="κ=0.6 (substantial)", annotation_position="right")
-    fig.add_hline(y=0.4, line=dict(color="rgba(255,165,0,0.4)", width=1, dash="dot"),
-                  annotation_text="κ=0.4 (moderate)", annotation_position="right")
+    xticks  = [xpos(li, si) for li in range(n_langs) for si in range(n_settings)]
+    xlabels = [SETTING_DISPLAY[s] for _ in LANGUAGES for s in SETTINGS]
+    ax.set_xticks(xticks)
+    ax.set_xticklabels(xlabels, rotation=40, ha="right", fontsize=8)
 
-    for jm, data in traces.items():
-        fig.add_trace(go.Scatter(
-            x=data["x"],
-            y=data["y"],
-            mode="markers",
-            name=JUDGE_DISPLAY.get(jm, jm),
-            marker=dict(
-                symbol=JUDGE_SYMBOLS.get(jm, "circle"),
-                color=JUDGE_COLORS.get(jm, "#888"),
-                size=10,
-                line=dict(color="white", width=1),
-                opacity=0.9,
-            ),
-            hovertemplate="%{customdata}<extra></extra>",
-            customdata=data["hover"],
-        ))
+    ax2 = ax.twiny()
+    ax2.set_xlim(ax.get_xlim())
+    ax2.set_xticks([xpos(li, (n_settings-1)/2) for li in range(n_langs)])
+    ax2.set_xticklabels([LANG_LABELS[l] for l in LANGUAGES], fontsize=10, fontweight="bold")
+    ax2.tick_params(axis="x", length=0, pad=6)
+    ax2.spines["bottom"].set_visible(False)
+    ax2.spines["right"].set_visible(False)
 
-    # Bottom x-axis: settings
-    tick_vals = []
-    tick_text = []
-    for lang in LANGUAGES:
-        base = lang_to_x[lang] * group_width
-        for setting in SETTINGS:
-            tick_vals.append(base + setting_offsets[setting])
-            tick_text.append(setting.capitalize())
+    ax.set_ylabel("Quadratic Cohen's κ  (judge vs. human)", fontsize=9)
+    ax.set_xlabel("Prompt setting", fontsize=9)
+    ax.set_title("LLM-as-a-Judge Accuracy vs. Human Expert\n"
+                 "(weighted Cohen's κ, aggregated over target LLMs)",
+                 fontsize=10, fontweight="bold", pad=14)
+    ax.set_ylim(-0.05, 1.0)
 
-    # Language annotations at the top
-    for lang in LANGUAGES:
-        base = lang_to_x[lang] * group_width + (group_width - 1) / 2
-        fig.add_annotation(
-            x=base, y=1.07, xref="x", yref="paper",
-            text=f"<b>{LANG_DISPLAY.get(lang, lang)}</b>",
-            showarrow=False, font=dict(size=12, color="#333"),
-            bgcolor="rgba(255,255,255,0.8)",
-            bordercolor="rgba(150,150,150,0.3)", borderwidth=1, borderpad=3,
-        )
+    handles = [
+        plt.Line2D([0],[0], marker=MODEL_MARKERS[m], color="w",
+                   markerfacecolor=MODEL_COLORS[m], markeredgecolor="white",
+                   markersize=7, label=JUDGE_DISPLAY[m])
+        for m in JUDGE_MODELS
+    ]
+    ax.legend(handles=handles, title="Judge model", fontsize=7.5,
+              title_fontsize=8, loc="upper left", bbox_to_anchor=(1.01, 1),
+              frameon=True, edgecolor="#DDDDDD")
 
-    fig.update_layout(
-        title=dict(
-            text="LLM-as-a-Judge Accuracy vs Human Expert<br>"
-                 "<sup>Weighted Cohen's κ (quadratic) — higher is better</sup>",
-            font=dict(size=20, family="Inter, Arial, sans-serif"),
-            x=0.5, xanchor="center",
-        ),
-        xaxis=dict(
-            tickmode="array", tickvals=tick_vals, ticktext=tick_text,
-            tickangle=-35, tickfont=dict(size=10),
-            showgrid=False, zeroline=False,
-            title=dict(text="Prompt Setting", font=dict(size=13)),
-        ),
-        yaxis=dict(
-            title=dict(text="Weighted Cohen's κ (quadratic)", font=dict(size=13)),
-            gridcolor="rgba(200,200,200,0.3)", zeroline=False,
-            range=[-0.15, 1.05],
-        ),
-        legend=dict(
-            title=dict(text="Judge Model", font=dict(size=12)),
-            bgcolor="rgba(255,255,255,0.92)",
-            bordercolor="rgba(150,150,150,0.3)", borderwidth=1,
-            font=dict(size=11),
-        ),
-        plot_bgcolor="white",
-        paper_bgcolor="white",
-        font=dict(family="Inter, Arial, sans-serif"),
-        width=1200, height=560,
-        margin=dict(l=70, r=200, t=100, b=90),
-        hovermode="closest",
-    )
-
-    return fig
+    fig.tight_layout()
+    for ext in ("pdf", "png"):
+        fig.savefig(OUT_DIR / f"judge_accuracy.{ext}", bbox_inches="tight", dpi=200)
+    print(f"  Saved → {OUT_DIR}/judge_accuracy.{{pdf,png}}")
+    plt.show()
 
 
-# ── Confusion matrices ────────────────────────────────────────────────────────
+# ── CONFUSION MATRIX HELPERS ──────────────────────────────────────────────────
+def _draw_cm(ax, cm, title, kappa=None):
+    """Draw a single column-normalised CM on ax. cm is [n_labels × n_labels]."""
+    im = ax.imshow(cm, cmap="Blues", vmin=0, vmax=100)
+    ax.set_xticks(range(len(CLASS_NAMES)))
+    ax.set_yticks(range(len(CLASS_NAMES)))
+    ax.set_xticklabels(CLASS_NAMES, rotation=35, ha="right", fontsize=7.5)
+    ax.set_yticklabels(CLASS_NAMES, fontsize=7.5)
+    ax.set_xlabel("Judge prediction", fontsize=7.5)
+    ax.set_ylabel("Human label", fontsize=7.5)
+    kappa_str = f"  κ={kappa:.3f}" if kappa is not None else ""
+    ax.set_title(f"{title}{kappa_str}", fontsize=7.5)
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            v = cm[i, j]
+            ax.text(j, i, f"{v:.0f}", ha="center", va="center",
+                    color="white" if v > 50 else "black", fontsize=7.5)
+    return im
 
-def plot_confusion_matrices(records):
-    """One subplot grid per (language, setting) pair."""
-    from itertools import groupby
 
-    class_names = ["Incorrect", "Partial", "Correct"]
-    grouped = {}
+def plot_confusion_matrices_per_lang_setting(records, cm_store):
+    """One figure per (language, setting): one subplot per judge model."""
+    by_ls = defaultdict(list)
     for rec in records:
-        grouped.setdefault((rec["language"], rec["setting"]), []).append(rec)
+        by_ls[(rec["language"], rec["setting"])].append(rec)
 
-    figs = []
-    for (lang, setting), recs in sorted(grouped.items()):
-        recs = sorted(recs, key=lambda x: x["judge"])
-        n = len(recs)
-        if n == 0:
-            continue
-
+    for (lang, setting), recs in sorted(by_ls.items()):
+        recs = sorted(recs, key=lambda r: r["judge"])
+        n     = len(recs)
         ncols = 3
         nrows = math.ceil(n / ncols)
-        titles = [
-            f"{JUDGE_DISPLAY.get(r['judge'], r['judge'])}<br>κ={r['kappa_weighted']:.3f}"
-            for r in recs
-        ] + [""] * (nrows * ncols - n)
-
-        v_spacing = min(0.14, 0.9 / max(nrows, 2)) if nrows > 1 else 0.0
-        fig = make_subplots(
-            rows=nrows, cols=ncols,
-            subplot_titles=titles,
-            horizontal_spacing=0.08,
-            vertical_spacing=v_spacing,
-        )
-
-        for idx, rec in enumerate(recs):
-            row, col = divmod(idx, ncols)
-            cm = rec["confusion_matrix"]
-            text_vals = [[f"{cm[i, j]:.1f}%" for j in range(3)] for i in range(3)]
-
-            fig.add_trace(go.Heatmap(
-                z=cm,
-                x=class_names,
-                y=class_names,
-                colorscale="Blues",
-                zmin=0, zmax=100,
-                text=text_vals,
-                texttemplate="%{text}",
-                textfont=dict(size=10),
-                showscale=(idx == 0),
-                colorbar=dict(title="% (col-norm)", len=0.3, y=0.85) if idx == 0 else None,
-                hovertemplate="Human: %{y}<br>Judge: %{x}<br>%{z:.1f}%<extra></extra>",
-            ), row=row + 1, col=col + 1)
-
-            fig.update_xaxes(title_text="Judge", row=row + 1, col=col + 1)
-            fig.update_yaxes(title_text="Human", row=row + 1, col=col + 1)
-
-        fig.update_layout(
-            title=dict(
-                text=f"Confusion Matrices — {LANG_DISPLAY.get(lang, lang)} / {setting.capitalize()}",
-                font=dict(size=16, family="Inter, Arial, sans-serif"),
-                x=0.5, xanchor="center",
-            ),
-            plot_bgcolor="white", paper_bgcolor="white",
-            font=dict(family="Inter, Arial, sans-serif", size=11),
-            width=1100, height=380 * nrows + 80,
-        )
-        figs.append((lang, setting, fig))
-
-    return figs
+        fig, axes = plt.subplots(nrows, ncols, figsize=(5.5*ncols, 4.2*nrows))
+        axes = np.array(axes).reshape(-1)
+        im = None
+        for ax, rec in zip(axes, recs):
+            im = _draw_cm(ax, rec["cm"],
+                          title=JUDGE_DISPLAY.get(rec["judge"], rec["judge"]),
+                          kappa=rec["kappa"])
+        for ax in axes[n:]:
+            ax.axis("off")
+        if im is not None:
+            cbar = fig.colorbar(im, ax=axes.tolist(), shrink=0.6)
+            cbar.set_label("Col-normalised (%)", fontsize=8)
+        fig.suptitle(f"Confusion Matrices (col-norm) — "
+                     f"{LANG_MAP[lang]}, {SETTING_DISPLAY[setting]}",
+                     fontsize=11, fontweight="bold")
+        fig.tight_layout()
+        fname = f"judge_cm_{lang}_{setting}"
+        for ext in ("pdf", "png"):
+            fig.savefig(OUT_DIR / f"{fname}.{ext}", bbox_inches="tight", dpi=150)
+        print(f"  Saved → {OUT_DIR}/{fname}.{{pdf,png}}")
+        plt.show()
 
 
-# ── Entry point ───────────────────────────────────────────────────────────────
+def plot_accumulated_cm(cm_store):
+    """Single aggregate CM over all languages × settings × judges × LLMs."""
+    all_true, all_pred = [], []
+    for vals in cm_store.values():
+        all_true.extend(vals["y_true"])
+        all_pred.extend(vals["y_pred"])
 
-def main():
-    print("Loading data …")
-    records = load_records()
-    if not records:
-        print("No accuracy data found. Check that parquet files exist in data/")
+    if not all_true:
+        print("  No data for accumulated CM.")
         return
 
-    print(f"Loaded {len(records)} records. Building main scatter plot…")
-    fig_scatter = plot_kappa_scatter(records)
-    out_path = os.path.join(OUTPUT_DIR, "llm_judge_accuracy_kappa.html")
-    fig_scatter.write_html(out_path)
-    print(f"  → saved {out_path}")
-    fig_scatter.show()
+    y_true = np.concatenate(all_true)
+    y_pred = np.concatenate(all_pred)
+    kappa  = cohen_kappa_score(y_true, y_pred, weights="quadratic")
+    cm     = confusion_matrix(y_true, y_pred, labels=LABEL_ORDER, normalize="pred") * 100
 
+    fig, ax = plt.subplots(figsize=(5, 4.5))
+    im = _draw_cm(ax, cm,
+                  title="All languages, settings & judges",
+                  kappa=kappa)
+    cbar = fig.colorbar(im, ax=ax, shrink=0.85)
+    cbar.set_label("Col-normalised (%)", fontsize=9)
+    ax.set_title(f"Accumulated Confusion Matrix (col-norm)\n"
+                 f"n={len(y_true):,}  κ={kappa:.3f}", fontsize=10, fontweight="bold")
+    fig.tight_layout()
+    for ext in ("pdf", "png"):
+        fig.savefig(OUT_DIR / f"judge_cm_accumulated.{ext}", bbox_inches="tight", dpi=200)
+    print(f"  Saved → {OUT_DIR}/judge_cm_accumulated.{{pdf,png}}")
+    plt.show()
+
+
+# ── ENTRY POINT ───────────────────────────────────────────────────────────────
+def main():
+    print("Loading data …")
+    records, cm_store = load_records()
+    if not records:
+        print("No data found — check DATA_DIR.")
+        return
+    print(f"  {len(records)} records.")
+    plot_kappa(records)
+    plot_accumulated_cm(cm_store)
     if SHOW_CONFUSION_MATRICES:
-        print("Building confusion matrix subplots…")
-        cm_figs = plot_confusion_matrices(records)
-        for lang, setting, fig in cm_figs:
-            name = f"llm_judge_accuracy_cm_{lang}_{setting}.html"
-            path = os.path.join(OUTPUT_DIR, name)
-            fig.write_html(path)
-            print(f"  → saved {path}")
-        if cm_figs:
-            cm_figs[0][2].show()
+        plot_confusion_matrices_per_lang_setting(records, cm_store)
 
 
 if __name__ == "__main__":

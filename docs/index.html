@@ -715,12 +715,10 @@
       <span>EMSE-Babel</span>
       <span class="badge">TU Delft</span>
     </a>
-    <a href="#llm-judge" data-en="LLM-as-a-Judge" data-zh="LLM 评测" data-nl="LLM-als-beoordelaar" data-el="LLM-ως-κριτής"
-      data-pl="LLM jako sędzia">LLM-as-a-Judge</a>
-    <a href="#neural" data-en="Neural Metrics" data-zh="神经指标" data-nl="Neurale metrieken" data-el="Νευρωνικές μετρικές"
-      data-pl="Metryki neuronowe">Neural Metrics</a>
-    <a href="#legacy" data-en="Legacy" data-zh="遗留视图" data-nl="Legacy" data-el="Προηγούμενα"
-      data-pl="Poprzednie">Legacy</a>
+    <a href="#taxonomy">Taxonomy</a>
+    <a href="#neural">Neural Metrics</a>
+    <a href="#llm-judge">LLM-as-a-Judge</a>
+    <a href="#legacy">Legacy</a>
     <select id="lang-select"
       style="background: var(--bg3); color: var(--accent); border: 1px solid var(--accent); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; margin-left: 10px; outline: none; transition: border-color .15s;">
       <option value="en">English</option>
@@ -780,40 +778,227 @@
 
     <!-- Quick access -->
     <div class="quick-strip">
-      <a class="quick-btn qb-cyan" href="#judge-accuracy" data-en="⚖️ Accuracy (κ)" data-zh="⚖️ 准确率 (κ)"
-        data-nl="⚖️ Nauwkeurigheid (κ)" data-el="⚖️ Ακρίβεια (κ)" data-pl="⚖️ Dokładność (κ)">⚖️ Accuracy (κ)</a>
-      <a class="quick-btn qb-cyan" href="#judge-cm" data-en="🗂️ Confusion Matrices" data-zh="🗂️ 混淆矩阵"
-        data-nl="🗂️ Verwarringsmatrices" data-el="🗂️ Πίνακες σύγχυσης" data-pl="🗂️ Macierze błędów">🗂️ Confusion
-        Matrices</a>
-      <a class="quick-btn qb-pink" href="#judge-halluc" data-en="👻 Hallucinations" data-zh="👻 幻觉率"
-        data-nl="👻 Hallucinaties" data-el="👻 Ψευδαισθήσεις" data-pl="👻 Halucynacje">👻 Hallucinations</a>
-
-      <a class="quick-btn qb-teal" href="#judge-freq" data-en="📊 Error Frequency" data-zh="📊 错误频率"
-        data-nl="📊 Foutfrequentie" data-el="📊 Συχνότητα σφαλμάτων" data-pl="📊 Częstotliwość błędów">📊 Error
-        Frequency</a>
-      <a class="quick-btn qb-green" href="#neural-scoring" data-en="🧠 Neural Scoring" data-zh="🧠 神经评分"
-        data-nl="🧠 Neurale score" data-el="🧠 Νευρωνική βαθμολογία" data-pl="🧠 Punktacja neuronowa">🧠 Neural
-        Scoring</a>
-      <a class="quick-btn qb-green" href="#neural-align" data-en="🎯 Alignment" data-zh="🎯 专家对齐"
-        data-nl="🎯 Uitlijning" data-el="🎯 Ευθυγράμμιση" data-pl="🎯 Dopasowanie">🎯 Alignment</a>
-      <a class="quick-btn qb-green" href="#neural-noise" data-en="🔊 Noise Detection" data-zh="🔊 噪声检测"
-        data-nl="🔊 Ruisdetectie" data-el="🔊 Ανίχνευση θορύβου" data-pl="🔊 Wykrywanie szumu">🔊 Noise Detection</a>
+      <a class="quick-btn qb-yellow" href="#taxonomy">🏷️ Taxonomy</a>
+      <a class="quick-btn qb-yellow" href="#human-labeling">👩‍🔬 Human Labeling</a>
+      <a class="quick-btn qb-green" href="#neural-scoring">🧠 Neural Scoring</a>
+      <a class="quick-btn qb-green" href="#neural-align">🎯 Alignment</a>
+      <a class="quick-btn qb-green" href="#neural-noise">🔊 Noise Detection</a>
+      <a class="quick-btn qb-cyan" href="#judge-accuracy">⚖️ Accuracy (κ)</a>
+      <a class="quick-btn qb-cyan" href="#judge-cm">🗂️ Confusion Matrices</a>
+      <a class="quick-btn qb-pink" href="#judge-halluc">👻 Hallucinations</a>
+      <a class="quick-btn qb-teal" href="#judge-freq">📊 Error Frequency</a>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
-    <!--  SECTION 1 — LLM-as-a-Judge                                            -->
+    <!--  SECTION 0 — Taxonomy & Human Labeling                                 -->
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="section-header" id="taxonomy">
+      <div class="section-icon" style="background:rgba(255,184,28,.15)">🏷️</div>
+      <div>
+        <div class="section-title">Taxonomy</div>
+        <div class="section-desc">Error taxonomy structure — categories, codes, inclusion &amp; exclusion criteria</div>
+      </div>
+      <div class="section-divider"></div>
+    </div>
+    <div class="card-grid" style="margin-bottom:14px">
+      <a class="card" href="taxonomy.html" target="_blank">
+        <div class="card-accent-bar" style="background:var(--yellow)"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">🏷️</span><span class="card-badge" style="background:rgba(255,184,28,.15);color:var(--yellow);border:1px solid rgba(255,184,28,.3)">Interactive</span></div>
+          <div class="card-title">Taxonomy Reference — Inclusion &amp; Exclusion Criteria</div>
+          <div class="card-desc">Searchable &amp; filterable reference of all 40 error codes with full inclusion criteria, exclusion criteria, and descriptions across all 12 categories.</div>
+        </div>
+        <div class="card-meta"><span class="tag">12 categories</span><span class="tag">40 codes</span><span class="tag">searchable</span><span class="card-arrow">→</span></div>
+      </a>
+      <a class="card" href="../plots/out/taxonomy_overview.png" target="_blank">
+        <div class="card-accent-bar" style="background:var(--yellow)"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">📊</span><span class="card-badge" style="background:rgba(255,184,28,.15);color:var(--yellow);border:1px solid rgba(255,184,28,.3)">PNG</span></div>
+          <div class="card-title">Taxonomy Overview Chart</div>
+          <div class="card-desc">Bar chart showing number of error codes per category, with code IDs annotated above each bar.</div>
+        </div>
+        <div class="card-meta"><span class="tag">bar chart</span><span class="tag">12 categories</span><span class="card-arrow">→</span></div>
+      </a>
+    </div>
+
+    <div class="section-header" id="human-labeling">
+      <div class="section-icon" style="background:rgba(255,184,28,.15)">👩‍🔬</div>
+      <div>
+        <div class="section-title">Human Labeling Results</div>
+        <div class="section-desc">Error-code frequencies assigned by human experts across all 5 languages and 5 target
+          LLMs</div>
+      </div>
+      <div class="section-divider"></div>
+    </div>
+    <div class="card-grid" style="margin-bottom:14px">
+      <a class="card" href="../plots/out/human_labeling_freq.png" target="_blank">
+        <div class="card-accent-bar" style="background:var(--yellow)"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">📊</span><span class="card-badge"
+              style="background:rgba(255,184,28,.15);color:var(--yellow);border:1px solid rgba(255,184,28,.3)">PNG</span>
+          </div>
+          <div class="card-title">Human Error Frequency (global)</div>
+          <div class="card-desc">Top-25 error codes by frequency per row, aggregated over all languages and target LLMs.
+          </div>
+        </div>
+        <div class="card-meta"><span class="tag">top-25</span><span class="tag">all languages</span><span
+            class="card-arrow">→</span></div>
+      </a>
+      <a class="card" href="../plots/out/human_labeling_by_language.png" target="_blank">
+        <div class="card-accent-bar" style="background:var(--yellow)"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">🌐</span><span class="card-badge"
+              style="background:rgba(255,184,28,.15);color:var(--yellow);border:1px solid rgba(255,184,28,.3)">PNG</span>
+          </div>
+          <div class="card-title">Human Error Frequency by Language</div>
+          <div class="card-desc">Grouped bar per language (EN/ZH/PL/NL/EL) showing each error-code's share of total
+            annotations in that language.</div>
+        </div>
+        <div class="card-meta"><span class="tag">5 languages</span><span class="tag">top-15</span><span
+            class="card-arrow">→</span></div>
+      </a>
+      <a class="card" href="../plots/out/human_labeling_by_llm.png" target="_blank">
+        <div class="card-accent-bar" style="background:var(--yellow)"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">🤖</span><span class="card-badge"
+              style="background:rgba(255,184,28,.15);color:var(--yellow);border:1px solid rgba(255,184,28,.3)">PNG</span>
+          </div>
+          <div class="card-title">Human Error Frequency by Target LLM</div>
+          <div class="card-desc">Grouped bar per target LLM (CodeGemma, CodeLlama, …) showing each error-code's share of
+            annotations for that model.</div>
+        </div>
+        <div class="card-meta"><span class="tag">5 LLMs</span><span class="tag">top-15</span><span
+            class="card-arrow">→</span></div>
+      </a>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <!--  SECTION 1 — Neural Metrics (paper order: comes before LLM-as-a-Judge) -->
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="section-header" id="neural">
+      <div class="section-icon icon-green">🧠</div>
+      <div>
+        <div class="section-title">Neural Metrics</div>
+        <div class="section-desc">BARTScore &amp; BERTScore — distributions, human alignment, and noise-detection
+          performance</div>
+      </div>
+      <div class="section-divider"></div>
+    </div>
+
+    <!-- Mean Scoring -->
+    <div class="card-grid" id="neural-scoring" style="margin-bottom:16px;">
+      <a class="card" href="neural_metrics_scoring_bertscore_polish.html" target="_blank">
+        <div class="card-accent-bar bar-green"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">📈</span><span
+              class="card-badge badge-plotly">Plotly</span></div>
+          <div class="card-title">Mean Score by Scoring Model &amp; Context</div>
+          <div class="card-desc">Log-scale dot-plot of mean BERTScore F per scoring model and context level (none /
+            minimal / full), averaged over 5 target LLMs.</div>
+        </div>
+        <div class="card-meta"><span class="tag">BERTScore F</span><span class="tag">Polish</span><span class="tag">log
+            scale</span><span class="card-arrow">→</span></div>
+      </a>
+    </div>
+
+    <!-- Alignment -->
+    <div id="neural-align">
+      <div class="lang-group">
+        <div class="lang-group-header">
+          <span style="font-size:20px">🎯</span>
+          <div>
+            <div class="lang-group-title">Human Alignment — Quadratic Cohen's κ</div>
+            <div class="lang-group-desc">How well does each scoring model correlate with human expert accuracy labels?
+              (Quadratic weighted κ)</div>
+          </div>
+          <span class="card-badge badge-plotly" style="margin-left:auto">Plotly</span>
+        </div>
+        <div class="lang-grid">
+          <a class="lang-item" href="neural_metrics_alignment_kappa_bartscore_chinese.html" target="_blank">
+            <span class="lang-flag">🇨🇳</span><span class="lang-name">Chinese</span><span class="lang-sub">Weighted
+              κ</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_alignment_kappa_bartscore_english.html" target="_blank">
+            <span class="lang-flag">🇬🇧</span><span class="lang-name">English</span><span class="lang-sub">Weighted
+              κ</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_alignment_kappa_bartscore_greek.html" target="_blank">
+            <span class="lang-flag">🇬🇷</span><span class="lang-name">Greek</span><span class="lang-sub">Weighted
+              κ</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_alignment_kappa_bartscore_dutch.html" target="_blank">
+            <span class="lang-flag">🇳🇱</span><span class="lang-name">Dutch</span><span class="lang-sub">Weighted
+              κ</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_alignment_kappa_bartscore_polish.html" target="_blank">
+            <span class="lang-flag">🇵🇱</span><span class="lang-name">Polish</span><span class="lang-sub">Weighted
+              κ</span>
+          </a>
+        </div>
+        <div class="lang-sub-links">
+          <span class="lang-sub-label">Confusion matrices:</span>
+          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_chinese.html" target="_blank">Chinese CM</a>
+          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_english.html" target="_blank">English CM</a>
+          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_greek.html" target="_blank">Greek CM</a>
+          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_dutch.html" target="_blank">Dutch CM</a>
+          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_polish.html" target="_blank">Polish CM</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Noise Detection -->
+    <div id="neural-noise" style="margin-top:0;">
+      <div class="lang-group">
+        <div class="lang-group-header">
+          <span style="font-size:20px">🔊</span>
+          <div>
+            <div class="lang-group-title">Noise Detection — KDE Binary Classifier (Macro F1)</div>
+            <div class="lang-group-desc">Can scoring models distinguish real comments from uniformly / targeted-noisy
+              ones?</div>
+          </div>
+          <span class="card-badge badge-plotly" style="margin-left:auto">Plotly</span>
+        </div>
+        <div class="lang-grid">
+          <a class="lang-item" href="neural_metrics_noise_bertscore_chinese.html" target="_blank">
+            <span class="lang-flag">🇨🇳</span><span class="lang-name">Chinese</span><span class="lang-sub">Noise
+              F1</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_noise_bertscore_english.html" target="_blank">
+            <span class="lang-flag">🇬🇧</span><span class="lang-name">English</span><span class="lang-sub">Noise
+              F1</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_noise_bertscore_greek.html" target="_blank">
+            <span class="lang-flag">🇬🇷</span><span class="lang-name">Greek</span><span class="lang-sub">Noise
+              F1</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_noise_bertscore_dutch.html" target="_blank">
+            <span class="lang-flag">🇳🇱</span><span class="lang-name">Dutch</span><span class="lang-sub">Noise
+              F1</span>
+          </a>
+          <a class="lang-item" href="neural_metrics_noise_bertscore_polish.html" target="_blank">
+            <span class="lang-flag">🇵🇱</span><span class="lang-name">Polish</span><span class="lang-sub">Noise
+              F1</span>
+          </a>
+        </div>
+        <div class="lang-sub-links">
+          <span class="lang-sub-label">Confusion matrices:</span>
+          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_chinese.html" target="_blank">Chinese CM</a>
+          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_english.html" target="_blank">English CM</a>
+          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_greek.html" target="_blank">Greek CM</a>
+          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_dutch.html" target="_blank">Dutch CM</a>
+          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_polish.html" target="_blank">Polish CM</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <!--  SECTION 2 — LLM-as-a-Judge                                            -->
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
     <div class="section-header" id="llm-judge">
       <div class="section-icon icon-cyan">⚖️</div>
       <div>
-        <div class="section-title" data-en="LLM-as-a-Judge" data-zh="LLM 裁判评测" data-nl="LLM-als-beoordelaar"
-          data-el="LLM-ως-κριτής" data-pl="LLM jako sędzia">LLM-as-a-Judge</div>
-        <div class="section-desc" data-en="Accuracy and hallucination rate of judge models vs. human expert labels"
-          data-zh="各模型作为裁判的准确率与幻觉率（对比专家标签）"
-          data-nl="Nauwkeurigheid en hallucinatiepercentage van beoordelingsmodellen versus menselijke expertlabels"
-          data-el="Ρυθμός ακρίβειας και ψευδαισθήσεων των μοντέλων κριτών έναντι των ετικετών ανθρώπινων εμπειρογνωμόνων"
-          data-pl="Dokładność i wskaźnik halucynacji modeli sędziowskich w porównaniu z etykietami ludzkich ekspertów">
-          Accuracy and hallucination rate of judge models vs. human expert labels</div>
+        <div class="section-title">LLM-as-a-Judge</div>
+        <div class="section-desc">Accuracy and hallucination rate of judge models vs. human expert labels</div>
       </div>
       <div class="section-divider"></div>
     </div>
@@ -852,13 +1037,10 @@
         <div class="lang-group-header">
           <span style="font-size:20px">🗂️</span>
           <div>
-            <div class="lang-group-title" data-en="Confusion Matrices — Accuracy" data-zh="混淆矩阵 — 准确率分布">Confusion
-              Matrices — Accuracy</div>
-            <div class="lang-group-desc"
-              data-en="Row-normalised 3-class confusion matrices (Incorrect / Partial / Correct) by language and prompt setting"
-              data-zh="按语言和提示词设置划分的 3 类（错误/部分正确/正确）归一化混淆矩阵">Row-normalised 3-class confusion matrices (Incorrect /
-              Partial / Correct) by
-              language and prompt setting</div>
+            <div class="lang-group-title">Confusion Matrices — Accuracy (Column-normalised)</div>
+            <div class="lang-group-desc">Column-normalised 3-class CMs (Correct / Partial / Incorrect) — shows what
+              fraction of each <em>judge prediction</em> corresponds to each human label. One file per language × prompt
+              setting.</div>
           </div>
           <span class="card-badge badge-plotly" style="margin-left:auto">Plotly</span>
         </div>
@@ -935,6 +1117,23 @@
       </div>
     </div>
 
+    <!-- Accumulated CM card -->
+    <div class="card-grid" style="margin-bottom:8px">
+      <a class="card" href="../plots/out/judge_cm_accumulated.png" target="_blank">
+        <div class="card-accent-bar bar-cyan"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">🔢</span><span class="card-badge"
+              style="background:rgba(0,166,214,.15);color:var(--accent);border:1px solid rgba(0,166,214,.3)">PNG</span>
+          </div>
+          <div class="card-title">Accumulated CM — All Conditions</div>
+          <div class="card-desc">Single aggregate column-normalised confusion matrix, pooled over all languages,
+            settings, judges, and target LLMs. κ shown in title.</div>
+        </div>
+        <div class="card-meta"><span class="tag">col-norm</span><span class="tag">all conditions</span><span
+            class="card-arrow">→</span></div>
+      </a>
+    </div>
+
     <!-- Hallucinations + Parse -->
     <div class="card-grid" id="judge-halluc" style="margin-bottom:14px">
 
@@ -978,177 +1177,54 @@
         <div class="card-body">
           <div class="card-header-row"><span class="card-icon">📊</span><span
               class="card-badge badge-bokeh">Bokeh</span></div>
-          <div class="card-title">Error Frequency Dashboard</div>
-          <div class="card-desc">Multi-tab Bokeh dashboard: LG-GR4 frequency per target LLM, accuracy distribution
-            (human vs. judges), and error-code heatmaps by model.</div>
+          <div class="card-title">Error Frequency Dashboard (legacy)</div>
+          <div class="card-desc">Legacy Bokeh dashboard with LG-GR4 focus.</div>
         </div>
-        <div class="card-meta">
-          <span class="tag">LG-GR4</span><span class="tag">error heatmap</span><span class="tag">Polish</span>
-          <span class="card-arrow">→</span>
-        </div>
+        <div class="card-meta"><span class="tag">legacy</span><span class="card-arrow">→</span></div>
       </a>
-
     </div>
 
-    <!-- ═══════════════════════════════════════════════════════════════════════ -->
-    <!--  SECTION 2 — Neural Metrics                                             -->
-    <!-- ═══════════════════════════════════════════════════════════════════════ -->
-    <div class="section-header" id="neural">
-      <div class="section-icon icon-green">🧠</div>
-      <div>
-        <div class="section-title" data-en="Neural Metrics" data-zh="神经评价指标" data-nl="Neurale metrieken"
-          data-el="Νευρωνικές μετρικές" data-pl="Metryki neuronowe">Neural Metrics</div>
-        <div class="section-desc"
-          data-en="BARTScore & BERTScore — distributions, human alignment, and noise-detection performance"
-          data-zh="BARTScore 与 BERTScore — 分布情况、专家对齐度及噪声检测表现"
-          data-nl="BARTScore & BERTScore — distributies, menselijke uitlijning en ruisdetectieprestaties"
-          data-el="BARTScore & BERTScore — κατανομές, ευθυγράμμιση με τον άνθρωπο και απόδοση ανίχνευσης θορύβου"
-          data-pl="BARTScore i BERTScore — rozkłady, dopasowanie do człowieka i wydajność wykrywania szumu">BARTScore &
-          BERTScore — distributions, human alignment, and noise-detection
-          performance</div>
-      </div>
-      <div class="section-divider"></div>
-    </div>
-
-    <!-- Mean Scoring -->
-    <div class="card-grid" id="neural-scoring" style="margin-bottom:16px;">
-      <a class="card" href="neural_metrics_scoring_bertscore_polish.html" target="_blank">
-        <div class="card-accent-bar bar-green"></div>
+    <!-- New frequency plots -->
+    <div class="card-grid" style="margin-bottom:14px">
+      <a class="card" href="../plots/out/judge_frequency_all_codes.png" target="_blank">
+        <div class="card-accent-bar bar-turq"></div>
         <div class="card-body">
-          <div class="card-header-row"><span class="card-icon">📈</span><span
-              class="card-badge badge-plotly">Plotly</span></div>
-          <div class="card-title" data-en="Mean Score by Scoring Model & Context" data-zh="平均得分分布 (按模型与上下文)">Mean Score
-            by Scoring Model & Context</div>
-          <div class="card-desc"
-            data-en="Log-scale dot-plot of mean BERTScore F per scoring model and context level (none / minimal / full), averaged over 5 target LLMs."
-            data-zh="各评分模型在不同上下文级别下的 BERTScore F 平均分对数点图。">Log-scale dot-plot of mean BERTScore F per scoring model and
-            context level (none /
-            minimal / full), averaged over 5 target LLMs.</div>
+          <div class="card-header-row"><span class="card-icon">📊</span><span class="card-badge"
+              style="background:rgba(0,184,200,.15);color:var(--accent3);border:1px solid rgba(0,184,200,.25)">PNG</span>
+          </div>
+          <div class="card-title">All Error Codes — Human vs. Judge</div>
+          <div class="card-desc">Horizontal bar chart comparing every taxonomy code's frequency between human experts
+            and judge average (all conditions).</div>
         </div>
-        <div class="card-meta">
-          <span class="tag">BERTScore F</span><span class="tag">Polish</span><span class="tag">log scale</span>
-          <span class="card-arrow">→</span>
-        </div>
+        <div class="card-meta"><span class="tag">all codes</span><span class="tag">global</span><span
+            class="card-arrow">→</span></div>
       </a>
-    </div>
-
-    <!-- Alignment -->
-    <div id="neural-align">
-      <div class="lang-group">
-        <div class="lang-group-header">
-          <span style="font-size:20px">🎯</span>
-          <div>
-            <div class="lang-group-title" data-en="Human Alignment — Macro F1 & Weighted κ"
-              data-zh="人类专家对齐度 — Macro F1 与 加权 κ" data-nl="Menselijke uitlijning — Macro F1 & Gewogen κ"
-              data-el="Ευθυγράμμιση με τον άνθρωπο — Macro F1 & Σταθμισμένο κ"
-              data-pl="Dopasowanie do człowieka — Macro F1 i ważone κ">Human Alignment — Macro F1 & Weighted κ</div>
-            <div class="lang-group-desc"
-              data-en="How well does each scoring model correlate with human expert accuracy labels?"
-              data-zh="衡量各评分模型与人类专家选择的准确率标签之间的相关程度。"
-              data-nl="Hoe goed correleert elk scoremodel met de nauwkeurigheidslabels van menselijke experts?"
-              data-el="Πόσο καλά συσχετίζεται κάθε μοντέλο βαθμολόγησης με τις ετικέτες ακρίβειας ανθρώπινων εμπειρογνωμόνων;"
-              data-pl="Jak dobrze każdy model punktacji koreluje z etykietami dokładności ludzkich ekspertów?">How well
-              does each scoring model correlate with human expert accuracy labels?
-            </div>
+      <a class="card" href="../plots/out/judge_frequency_accumulated.png" target="_blank">
+        <div class="card-accent-bar bar-turq"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">📦</span><span class="card-badge"
+              style="background:rgba(0,184,200,.15);color:var(--accent3);border:1px solid rgba(0,184,200,.25)">PNG</span>
           </div>
-          <span class="card-badge badge-plotly" style="margin-left:auto">Plotly</span>
+          <div class="card-title">Accumulated Frequency — All Conditions</div>
+          <div class="card-desc">Grouped bar chart of accumulated error counts per 1,000 rows, pooled over all languages
+            × judges × settings × LLMs.</div>
         </div>
-        <div class="lang-grid">
-          <a class="lang-item" href="neural_metrics_alignment_f1_bartscore_chinese.html" target="_blank">
-            <span class="lang-flag">🇨🇳</span>
-            <span class="lang-name">Chinese</span>
-            <span class="lang-sub">Macro F1</span>
-          </a>
-          <a class="lang-item" href="neural_metrics_alignment_f1_bartscore_english.html" target="_blank">
-            <span class="lang-flag">🇬🇧</span>
-            <span class="lang-name">English</span>
-            <span class="lang-sub">Macro F1</span>
-          </a>
-          <a class="lang-item" href="neural_metrics_alignment_f1_bartscore_greek.html" target="_blank">
-            <span class="lang-flag">🇬🇷</span>
-            <span class="lang-name">Greek</span>
-            <span class="lang-sub">Macro F1</span>
-          </a>
-          <a class="lang-item" href="neural_metrics_alignment_f1_bartscore_dutch.html" target="_blank">
-            <span class="lang-flag">🇳🇱</span>
-            <span class="lang-name">Dutch</span>
-            <span class="lang-sub">Macro F1</span>
-          </a>
-          <a class="lang-item" href="neural_metrics_alignment_f1_bartscore_polish.html" target="_blank">
-            <span class="lang-flag">🇵🇱</span>
-            <span class="lang-name">Polish</span>
-            <span class="lang-sub">Macro F1</span>
-          </a>
-        </div>
-        <div class="lang-sub-links">
-          <span class="lang-sub-label">κ views:</span>
-          <a class="lang-link" href="neural_metrics_alignment_kappa_bartscore_chinese.html" target="_blank">Chinese
-            κ</a>
-          <a class="lang-link" href="neural_metrics_alignment_kappa_bartscore_english.html" target="_blank">English
-            κ</a>
-          <a class="lang-link" href="neural_metrics_alignment_kappa_bartscore_greek.html" target="_blank">Greek κ</a>
-          <a class="lang-link" href="neural_metrics_alignment_kappa_bartscore_dutch.html" target="_blank">Dutch κ</a>
-          <a class="lang-link" href="neural_metrics_alignment_kappa_bartscore_polish.html" target="_blank">Polish κ</a>
-        </div>
-        <div class="lang-sub-links" style="border-top:1px solid var(--border2);">
-          <span class="lang-sub-label">Confusion matrices:</span>
-          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_chinese.html" target="_blank">Chinese CM</a>
-          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_english.html" target="_blank">English CM</a>
-          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_greek.html" target="_blank">Greek CM</a>
-          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_dutch.html" target="_blank">Dutch CM</a>
-          <a class="lang-link" href="neural_metrics_alignment_cm_bartscore_polish.html" target="_blank">Polish CM</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Noise Detection -->
-    <div id="neural-noise" style="margin-top:0;">
-      <div class="lang-group">
-        <div class="lang-group-header">
-          <span style="font-size:20px">🔊</span>
-          <div>
-            <div class="lang-group-title">Noise Detection — KDE Binary Classifier (Macro F1)</div>
-            <div class="lang-group-desc">Can scoring models distinguish real comments from uniformly / targeted-noisy
-              ones?</div>
+        <div class="card-meta"><span class="tag">all codes</span><span class="tag">accumulated</span><span
+            class="card-arrow">→</span></div>
+      </a>
+      <a class="card" href="../plots/out/judge_frequency_heatmap.png" target="_blank">
+        <div class="card-accent-bar bar-turq"></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-icon">🟨</span><span class="card-badge"
+              style="background:rgba(0,184,200,.15);color:var(--accent3);border:1px solid rgba(0,184,200,.25)">PNG</span>
           </div>
-          <span class="card-badge badge-plotly" style="margin-left:auto">Plotly</span>
+          <div class="card-title">Error Frequency Heatmap (English / CodeGemma)</div>
+          <div class="card-desc">Code × row heatmap: human rate | judge avg rate | Δ relative change. Configurable
+            language and target LLM in script.</div>
         </div>
-        <div class="lang-grid">
-          <a class="lang-item" href="neural_metrics_noise_bertscore_chinese.html" target="_blank">
-            <span class="lang-flag">🇨🇳</span>
-            <span class="lang-name">Chinese</span>
-            <span class="lang-sub">Noise F1</span>
-          </a>
-          <a class="lang-item" href="neural_metrics_noise_bertscore_english.html" target="_blank">
-            <span class="lang-flag">🇬🇧</span>
-            <span class="lang-name">English</span>
-            <span class="lang-sub">Noise F1</span>
-          </a>
-          <a class="lang-item" href="neural_metrics_noise_bertscore_greek.html" target="_blank">
-            <span class="lang-flag">🇬🇷</span>
-            <span class="lang-name">Greek</span>
-            <span class="lang-sub">Noise F1</span>
-          </a>
-          <a class="lang-item" href="neural_metrics_noise_bertscore_dutch.html" target="_blank">
-            <span class="lang-flag">🇳🇱</span>
-            <span class="lang-name">Dutch</span>
-            <span class="lang-sub">Noise F1</span>
-          </a>
-          <a class="lang-item" href="neural_metrics_noise_bertscore_polish.html" target="_blank">
-            <span class="lang-flag">🇵🇱</span>
-            <span class="lang-name">Polish</span>
-            <span class="lang-sub">Noise F1</span>
-          </a>
-        </div>
-        <div class="lang-sub-links">
-          <span class="lang-sub-label">Confusion matrices:</span>
-          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_chinese.html" target="_blank">Chinese CM</a>
-          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_english.html" target="_blank">English CM</a>
-          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_greek.html" target="_blank">Greek CM</a>
-          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_dutch.html" target="_blank">Dutch CM</a>
-          <a class="lang-link" href="neural_metrics_noise_cm_bertscore_polish.html" target="_blank">Polish CM</a>
-        </div>
-      </div>
+        <div class="card-meta"><span class="tag">heatmap</span><span class="tag">English</span><span
+            class="card-arrow">→</span></div>
+      </a>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
